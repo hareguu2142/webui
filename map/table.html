@@ -1,188 +1,211 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Table</title>
-    <style>
-        table {
-            border-collapse: collapse;
-        }
-        td {
-            border: 1px solid black;
-            width: 50px;
-            height: 50px;
-            text-align: center;
-        }
+    <title>패턴 맞추기</title>
+<!-- 1. KaTeX CSS -->
+<link href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" rel="stylesheet"/>
 
-        /* Style even and odd columns */
-        td:nth-child(odd) {
-            background-color: #ffffff; /* White for odd columns */
-        }
+<!-- 2. KaTeX JS Core -->
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js"></script>
 
-        td:nth-child(even) {
-            background-color: #ffffff; /* White for even columns */
-        }
-    </style>
+<!-- 3. KaTeX Auto-render Extension -->
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js"></script>
+
+<style>
+    /* Style for the entire page body */
+    body {
+        background-color: #ffffff; /* Initial white background */
+        /* Smooth transition for the background color change */
+        transition: background-color 0.7s ease-in-out;
+    }
+
+    /* Class added to body when pattern is matched */
+    body.pattern-matched {
+        background-color: #f0f0f0; /* Target light gray background */
+    }
+
+    table {
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        margin-top: 10px;
+        /* Prevent text selection during rapid clicking */
+        user-select: none;
+        -webkit-user-select: none; /* Safari */
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* IE/Edge */
+        background-color: white; /* Keep tables white */
+        border: 1px solid #ccc; /* Add border to tables */
+        margin-left: auto;
+        margin-right: auto;
+    }
+    td {
+        border: 1px solid black;
+        width: 40px; /* Adjust size as needed */
+        height: 40px; /* Adjust size as needed */
+        text-align: center;
+        background-color: #ffffff; /* Default white for cells */
+        cursor: pointer; /* Indicate cells are clickable */
+    }
+    /* Style for black cells */
+    td.black {
+        background-color: black;
+    }
+
+    /* Initially hide the content section */
+    #revealContent {
+        /* Start hidden and transparent */
+        display: none;
+        opacity: 0;
+        padding: 15px;
+        border: 1px solid #ccc;
+        margin-top: 10px;
+        background-color: white; /* Give it a distinct background from the body */
+        /* Transition only for opacity (fade-in/out) */
+        transition: opacity 0.5s ease-in-out;
+    }
+
+    /* Style for when the content IS revealed */
+    #revealContent.visible {
+        display: block; /* Make it take up space */
+        opacity: 1; /* Fade it in */
+        /* Background color is inherited or set explicitly */
+    }
+
+    h2 {
+        margin-bottom: 5px;
+        text-align: center;
+    }
+
+    /* Add a specific style for the top display table to remove cursor pointer if desired */
+    #patternTable td {
+        cursor: default; /* Make cells in the top table not look clickable */
+    }
+</style>
 </head>
 <body>
-    <table>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-    </table>
+<!-- Heading for the target pattern display table -->
+<h2>$y =-x$</h2>
 
-    <script>
-        const table = document.querySelector('table');
-        table.addEventListener('click', function(event) {
-            const target = event.target;
-            if (target.tagName === 'TD') {
-                const column = target.cellIndex + 1;
-                if (column % 2 === 0) {
-                    // Even column
-                    if (target.style.backgroundColor === 'blue') {
-                        target.style.backgroundColor = ''; // Revert to default
-                    } else {
-                        target.style.backgroundColor = 'blue'; // Change to blue
-                    }
-                } else {
-                    // Odd column
-                    if (target.style.backgroundColor === 'green') {
-                        target.style.backgroundColor = ''; // Revert to default
-                    } else {
-                        target.style.backgroundColor = 'green'; // Change to green
-                    }
-                }
-            }
-        });
+<!-- Static Table showing the y=x pattern -->
+<table id="patternTable">
+    <!-- 10x10 Table Rows -->
+    <tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+    <tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+    <tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+    <tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+    <tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+    <tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+    <tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+    <tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+    <tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+    <tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+</table>
 
-        // Set background color for y=x with center (0,0)
-        for (let i = 0; i < 10; i++) {
-            const row = table.rows[i];
-            for (let j = 0; j < 10; j++) {
+<!-- Heading for the interactive table -->
+<h2>$y=x$</h2>
+
+<!-- Interactive Table -->
+<table id="interactiveTable">
+    <!-- 10x10 Table Rows -->
+    <tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+    <tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+    <tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+    <tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+    <tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+    <tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+    <tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+    <tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+    <tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+    <tr> <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>
+</table>
+
+<!-- Hidden content to reveal -->
+<div id="revealContent">
+    <h2>CODE : tan45o </h2>
+
+</div>
+
+<script>
+    // Get references to elements
+    const patternTable = document.getElementById('patternTable');
+    const interactiveTable = document.getElementById('interactiveTable');
+    const interactiveCells = interactiveTable.querySelectorAll('td');
+    const contentToReveal = document.getElementById('revealContent');
+    const pageBody = document.body; // Reference to the body element
+    const gridSize = 10;
+    const targetSumInteractive = gridSize - 1;
+
+    // --- Setup for Pattern Table (y=x) ---
+    function setupPatternTable() {
+        for (let i = 0; i < gridSize; i++) {
+            const row = patternTable.rows[i];
+            for (let j = 0; j < gridSize; j++) {
                 const cell = row.cells[j];
-                if (i + j === 9) {
-                    cell.style.backgroundColor = 'black';
+                cell.classList.remove('black');
+                if (i === j) {
+                    cell.classList.add('black');
                 }
             }
         }
-    </script>
+    }
+
+    // --- Check if interactive table matches target pattern (y=-x+9) ---
+    function checkPatternMatch() {
+        let isMatch = true;
+        for (let i = 0; i < gridSize; i++) {
+            const row = interactiveTable.rows[i];
+            for (let j = 0; j < gridSize; j++) {
+                const cell = row.cells[j];
+                const isBlack = cell.classList.contains('black');
+                const shouldBeBlack = (i + j === targetSumInteractive);
+                if (isBlack !== shouldBeBlack) {
+                    isMatch = false;
+                    break;
+                }
+            }
+            if (!isMatch) break;
+        }
+
+        // Apply/Remove classes based on match result
+        if (isMatch) {
+            pageBody.classList.add('pattern-matched');      // Change body background to gray
+            contentToReveal.classList.add('visible');     // Show the content div
+            console.log("Pattern y=-x+9 matched! Changing background and showing content.");
+        } else {
+            pageBody.classList.remove('pattern-matched');  // Revert body background to white
+            contentToReveal.classList.remove('visible'); // Hide the content div
+            console.log("Pattern y=-x+9 not matched. Reverting background and hiding content.");
+        }
+    }
+
+    // --- Event listener for interactive table ---
+    interactiveTable.addEventListener('click', function(event) {
+        if (event.target.tagName === 'TD') {
+            event.target.classList.toggle('black');
+            checkPatternMatch(); // Check after every click
+        }
+    });
+
+    // --- Initial Setup ---
+    setupPatternTable();
+    interactiveCells.forEach(cell => cell.classList.remove('black'));
+    checkPatternMatch(); // Initial check (will hide content and set white background)
+
+</script>
+
+<!-- 4. KaTeX Auto-rendering -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ],
+            throwOnError: false
+        });
+    });
+</script>
 </body>
 </html>

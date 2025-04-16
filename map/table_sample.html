@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>좌표평면 테이블 (11x11, y=x 강조)</title>
+    <style>
+        table {
+            border-collapse: collapse; /* 테두리 겹침 방지 */
+            margin: 20px;
+        }
+        td {
+            border: 1px solid black; /* 셀 테두리 */
+            width: 35px;             /* 셀 너비 조정 (11x11이므로 약간 더 줄임) */
+            height: 35px;            /* 셀 높이 조정 */
+            text-align: center;      /* 텍스트 가운데 정렬 (필요시) */
+            vertical-align: middle;  /* 텍스트 수직 가운데 정렬 (필요시) */
+            cursor: default;         /* 팝업 없으므로 기본 커서 사용 */
+            font-size: 8px;          /* 셀 안의 글자 크기 (좌표 표시용, 약간 더 줄임) */
+        }
+        td:hover {
+            background-color: #f0f0f0; /* 마우스 오버 시 배경색 변경 */
+        }
+        /* y=x 를 지나는 셀 스타일 */
+        td.y-equals-x {
+            background-color: red;
+            color: white; /* 텍스트가 있다면 잘 보이도록 흰색으로 */
+        }
+        /* y=x 셀에 마우스 오버 시 */
+        td.y-equals-x:hover {
+            background-color: darkred;
+        }
+    </style>
+</head>
+<body>
+
+<h1>11x11 좌표평면 테이블</h1>
+<!-- 팝업 기능 제거 설명으로 수정 -->
+<p>좌표평면의 원점은 테이블의 중앙(6행 6열, 인덱스 5,5)입니다.</p>
+<p><span style="background-color:red; color:white; padding: 2px 5px; border: 1px solid black;">붉은색 셀</span>은 y = x 직선 위의 점에 해당합니다.</p>
+
+<table id="coordinate-table">
+    <!-- 테이블 내용은 JavaScript로 생성 -->
+</table>
+
+<script>
+    // 나는 수학교사이기 때문에, 모든 명령은 기본적으로 '수학'의 관점에서 이루어진다.
+
+    // 테이블 요소 가져오기
+    const table = document.getElementById('coordinate-table');
+    const tableSize = 11; // 테이블 크기 (11x11) - 행렬의 차원 또는 집합의 크기로 볼 수 있음
+
+    // 좌표계의 원점 정의 (0부터 시작하는 테이블 인덱스 기준)
+    // 11x11 테이블(행렬)에서 정확한 중앙 위치 (6행 6열)를 원점으로 선택
+    // 수학적 좌표 (0, 0)에 해당하는 테이블 상의 위치 (배열 인덱스)
+    const originRow = 5; // 6번째 행 (인덱스 5)
+    const originCol = 5; // 6번째 열 (인덱스 5)
+
+    // 테이블(행렬) 생성 및 각 셀(원소) 정의
+    for (let i = 0; i < tableSize; i++) { // i: 행 인덱스 (0부터 tableSize-1 까지)
+        const row = table.insertRow(); // 새 행(tr) 추가
+        for (let j = 0; j < tableSize; j++) { // j: 열 인덱스 (0부터 tableSize-1 까지)
+            const cell = row.insertCell(); // 새 셀(td) 추가
+
+            // 좌표 변환: 테이블 인덱스 (i, j) -> 데카르트 좌표 (X, Y)
+            // X 좌표 계산: 열 인덱스(j)를 기준으로 원점과의 상대적 위치 계산
+            // X = j - originCol
+            const coordX = j - originCol;
+
+            // Y 좌표 계산: 행 인덱스(i)를 기준으로 원점과의 상대적 위치 계산
+            // 수학적 Y축은 위로 갈수록 값이 증가하지만, HTML 테이블 행 인덱스(i)는 아래로 갈수록 증가함.
+            // 따라서, 변환 시 부호 반전 필요. Y = originRow - i
+            const coordY = originRow - i;
+
+            // --- y=x 조건 확인 및 스타일 적용 ---
+            // 함수 y = x는 좌표평면에서 X 좌표와 Y 좌표가 같은 점들의 집합이다.
+            if (coordX === coordY) {
+                // 해당 셀(원소)이 y=x 직선 위에 있다면, 스타일 클래스를 추가한다.
+                cell.classList.add('y-equals-x');
+            }
+            // ------------------------------------
+
+            // 디버깅 또는 시각화를 위해 셀 안에 좌표 표시 (선택 사항)
+            // cell.innerText = `(${coordX}, ${coordY})`; // 각 셀에 해당 수학적 좌표 표시
+
+            // 셀 클릭 이벤트 리스너 추가 (각 셀에 대한 상호작용 정의)
+            /* // --- 팝업 기능 주석 처리 시작 ---
+            cell.addEventListener('click', function() {
+                // 클릭 시, 해당 셀의 정보(테이블 위치 및 수학적 좌표)를 팝업으로 표시
+                alert(`테이블 위치 (행, 열): (${i}, ${j})\n좌표평면 좌표 (X, Y): (${coordX}, ${coordY})`);
+            });
+            */ // --- 팝업 기능 주석 처리 끝 ---
+        }
+    }
+</script>
+
+</body>
+</html>

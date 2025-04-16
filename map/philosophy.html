@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>텍스트 분석기 </title>
+    <style>
+        /* Basic Reset & Font */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Malgun Gothic', '맑은 고딕', sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Main Container */
+        .container {
+            background-color: #ffffff;
+            padding: 30px 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+
+        /* Theme Image */
+        .theme-image {
+            display: block;
+            /* Initial width set by JS, but have a fallback */
+            width: 150px; /* Default/fallback width */
+            max-width: 90%; /* Prevent exceeding container width */
+            height: auto;
+            margin: 0 auto 10px auto; /* Reduced bottom margin */
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: width 0.1s ease-out; /* Smooth size change */
+        }
+
+        /* Image Size Controls */
+        .image-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px; /* Space before input group */
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        #imageSizeSlider {
+            width: 150px; /* Adjust slider width as needed */
+            cursor: pointer;
+        }
+
+        #imageSizeValue {
+            min-width: 40px; /* Ensure space for 'XXXpx' */
+            text-align: right;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        /* Input Group */
+        .input-group {
+            display: flex;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+
+        #inputText {
+            flex-grow: 1;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        #inputText:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+        }
+
+        #checkButton {
+            padding: 10px 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+
+        #checkButton:hover {
+            background-color: #0056b3;
+        }
+        #checkButton:active {
+            transform: scale(0.98);
+        }
+
+        /* Output Area */
+        #outputArea {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            min-height: 50px;
+            line-height: 1.7;
+            text-align: left;
+            word-wrap: break-word;
+        }
+        #outputArea:empty::before {
+            content: "결과가 여기에 표시됩니다.";
+            color: #aaa;
+            font-style: italic;
+        }
+
+        /* Code Area */
+        #codeArea {
+            display: none;
+            margin-top: 20px;
+            padding: 12px 15px;
+            background-color: #e9ecef;
+            border: 1px solid #ced4da;
+            border-left: 5px solid #007bff;
+            border-radius: 5px;
+            font-weight: bold;
+            color: #495057;
+            text-align: left;
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+
+        /* Highlight */
+        .highlight {
+            color: #dc3545;
+            font-weight: bold;
+            background-color: rgba(220, 53, 69, 0.1);
+            padding: 0 2px;
+            border-radius: 3px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>텍스트 분석기</h1>
+
+        <!-- Theme Image -->
+        <img src="../source/Delphi.webp" alt="델포이 신전 관련 이미지" class="theme-image" id="themeImage">
+
+        <!-- Image Size Controls -->
+        <div class="image-controls">
+            <label for="imageSizeSlider">크기:</label>
+            <input type="range" id="imageSizeSlider" min="50" max="300" value="150" step="5">
+            <span id="imageSizeValue">150px</span>
+        </div>
+
+        <!-- Input Group -->
+        <div class="input-group">
+            <input type="text" id="inputText" placeholder="텍스트를 입력하세요..." value="누구도 알지 못하게, 너에게 마음을 전할래">
+            <button id="checkButton">확인</button>
+        </div>
+
+        <!-- Output Area -->
+        <div id="outputArea"></div>
+
+        <!-- Code Area -->
+        <div id="codeArea">CODE: 소크라테스</div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const inputTextElement = document.getElementById('inputText');
+        const checkButtonElement = document.getElementById('checkButton');
+        const outputAreaElement = document.getElementById('outputArea');
+        const codeAreaElement = document.getElementById('codeArea');
+        const themeImageElement = document.getElementById('themeImage'); // Get the image
+        const imageSizeSliderElement = document.getElementById('imageSizeSlider'); // Get the slider
+        const imageSizeValueElement = document.getElementById('imageSizeValue'); // Get the size display span
+
+        const targetChars = ['너', '자', '신', '을', '알', '라'];
+
+        // --- Image Size Control Logic ---
+        function updateImageSize() {
+            const newSize = imageSizeSliderElement.value;
+            themeImageElement.style.width = newSize + 'px';
+            imageSizeValueElement.textContent = newSize + 'px';
+        }
+
+        // Add event listener to the slider
+        imageSizeSliderElement.addEventListener('input', updateImageSize);
+
+        // Set initial size on page load
+        updateImageSize();
+        // --- End Image Size Control Logic ---
+
+
+        // --- Text Analysis Logic ---
+        checkButtonElement.addEventListener('click', function() {
+            outputAreaElement.innerHTML = '';
+            codeAreaElement.style.display = 'none';
+
+            const inputValue = inputTextElement.value;
+
+            if (!inputValue) {
+                return;
+            }
+
+            let processedHtml = '';
+            for (let i = 0; i < inputValue.length; i++) {
+                const char = inputValue[i];
+                if (targetChars.includes(char)) {
+                    processedHtml += `<span class="highlight">${char}</span>`;
+                } else {
+                    processedHtml += char;
+                }
+            }
+            outputAreaElement.innerHTML = processedHtml;
+
+            const allCharsFound = targetChars.every(char => inputValue.includes(char));
+
+            if (allCharsFound) {
+                codeAreaElement.style.display = 'block';
+            }
+        });
+
+        inputTextElement.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                checkButtonElement.click();
+            }
+        });
+        // --- End Text Analysis Logic ---
+
+    </script>
+
+</body>
+</html>
