@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table</title>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+        td {
+            border: 1px solid black;
+            width: 50px;
+            height: 50px;
+            text-align: center;
+        }
+
+        /* Style even and odd columns */
+        td:nth-child(odd) {
+            background-color: #ffffff; /* White for odd columns */
+        }
+
+        td:nth-child(even) {
+            background-color: #ffffff; /* White for even columns */
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+
+    <script>
+        const table = document.querySelector('table');
+        table.addEventListener('click', function(event) {
+            const target = event.target;
+            if (target.tagName === 'TD') {
+                const column = target.cellIndex + 1;
+                if (column % 2 === 0) {
+                    // Even column
+                    if (target.style.backgroundColor === 'blue') {
+                        target.style.backgroundColor = ''; // Revert to default
+                    } else {
+                        target.style.backgroundColor = 'blue'; // Change to blue
+                    }
+                } else {
+                    // Odd column
+                    if (target.style.backgroundColor === 'green') {
+                        target.style.backgroundColor = ''; // Revert to default
+                    } else {
+                        target.style.backgroundColor = 'green'; // Change to green
+                    }
+                }
+            }
+        });
+
+        // Set background color for y=x with center (0,0)
+        for (let i = 0; i < 10; i++) {
+            const row = table.rows[i];
+            for (let j = 0; j < 10; j++) {
+                const cell = row.cells[j];
+                if (i + j === 9) {
+                    cell.style.backgroundColor = 'black';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
