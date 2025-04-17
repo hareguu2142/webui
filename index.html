@@ -3,19 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>코드 제출 페이지</title>
+    <title>코드 제출 및 지도 페이지</title>
+    <style>
+        /* Basic Reset & Font */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7f6; /* Light grey background */
+            color: #333;
+        }
+
+        /* Centered Container */
+        .container {
+            max-width: 800px; /* Limit width */
+            margin: 30px auto; /* Center horizontally with space top/bottom */
+            padding: 25px;
+            background-color: #ffffff; /* White background for content */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Subtle shadow */
+            border-radius: 8px; /* Rounded corners */
+        }
+
+        /* Headings */
+        h1, h2 {
+            color: #2c3e50; /* Darker blue-grey */
+            border-bottom: 2px solid #e0e0e0; /* Subtle underline */
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.5em; margin-top: 30px;} /* Add space above H2 */
+
+        /* Paragraphs */
+        p {
+            margin-bottom: 15px;
+        }
+
+        /* Links */
+        a {
+            color: #3498db; /* Nice blue */
+            text-decoration: none;
+            transition: color 0.2s ease-in-out;
+        }
+        a:hover {
+            color: #2980b9; /* Darker blue on hover */
+            text-decoration: underline;
+        }
+        /* Special link styling for the submit button */
+        .submit-link a {
+            display: inline-block; /* Allows padding and background */
+            background-color: #2ecc71; /* Green */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .submit-link a:hover {
+            background-color: #27ae60; /* Darker green */
+            text-decoration: none;
+        }
+
+        /* Map Links List */
+        .map-links ul {
+            list-style: none; /* Remove default bullets */
+            padding: 0;
+        }
+        .map-links li {
+            margin-bottom: 10px; /* Space between list items */
+            padding: 8px;
+            background-color: #ecf0f1; /* Very light grey background for items */
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
+        }
+        .map-links li:hover {
+             background-color: #dde4e6; /* Slightly darker on hover */
+        }
+        .map-links a {
+            font-weight: 500; /* Slightly bolder text for links */
+        }
+
+        /* Input and Button section */
+        .move-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0; /* Separator line */
+        }
+        #myInput {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 5px;
+            min-width: 200px; /* Give it some width */
+        }
+        #submitBtn {
+            padding: 10px 15px;
+            background-color: #3498db; /* Blue */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.2s ease-in-out;
+        }
+        #submitBtn:hover {
+            background-color: #2980b9; /* Darker blue */
+        }
+
+    </style>
 </head>
 <body>
 
-    <h1>코드 제출</h1>
-    <p>아래 링크를 클릭하여 코드를 제출해주세요.</p>
-    <p>
-        <a href="https://script.google.com/macros/s/AKfycbyTNYm6HeZJ03qdMwWM3mSWgt1s8qwJvDtJdJO92gSWl1ZsxUyNnBLDZwPyY5P6O5Vs3g/exec">코드 제출하러가기</a>
-    </p>
+    <div class="container">
 
-    <input type="text" id="myInput" name="myInput">
-    <button id="submitBtn">이동</button>
-    <script src="js/move.js"></script>
+        <h1>코드 제출 및 관련 페이지</h1>
+
+        <!-- Section 1: Code Submission -->
+        <section class="code-submission">
+            <h2>코드 제출</h2>
+            <p>아래 링크를 클릭하여 코드를 제출해주세요.</p>
+            <p class="submit-link">
+                <a href="https://script.google.com/macros/s/AKfycbyTNYm6HeZJ03qdMwWM3mSWgt1s8qwJvDtJdJO92gSWl1ZsxUyNnBLDZwPyY5P6O5Vs3g/exec" target="_blank" rel="noopener noreferrer">코드 제출하러 가기</a>
+                <!-- Added target="_blank" to open in new tab -->
+            </p>
+        </section>
+
+        <!-- Section 2: Map File Links -->
+        <section class="map-links">
+            <h2>지도 관련 페이지 링크</h2>
+            <ul>
+                <li><a href="map/first.html">first.html</a></li>
+                <li><a href="map/philosophy.html">philosophy.html</a></li>
+                <li><a href="map/start.html">start.html</a></li>
+                <li><a href="map/table.html">table.html</a></li>
+                <li><a href="map/table_sample.html">table_sample.html</a></li>
+            </ul>
+        </section>
+
+        <!-- Section 3: Move Script Input/Button -->
+        <section class="move-section">
+             <h2>이동 기능 (Test)</h2> <!-- Added a heading for context -->
+             <input type="text" id="myInput" name="myInput" placeholder="이동할 값 입력...">
+             <button id="submitBtn">이동</button>
+             <script src="js/move.js"></script> <!-- Script moved to end of body (best practice) -->
+        </section>
+
+    </div> <!-- End Container -->
 
 </body>
 </html>

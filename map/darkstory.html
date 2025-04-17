@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상모대학 등산 동아리 이야기</title>
+    <style>
+        :root {
+            /* --- 무지개색 어둡기 조절 매개변수 --- */
+            /* 0%는 검은색, 100%는 완전한 색, 50%가 보통 밝기입니다. */
+            /* 값을 낮출수록 어두워집니다. (예: 30%, 40%) */
+            --rainbow-lightness: 40%;
+
+            /* (선택사항) 채도 조절 매개변수 */
+            /* 100%가 가장 선명한 색, 낮출수록 탁해집니다. */
+            --rainbow-saturation: 90%;
+
+            /* --- 배경색과 숨겨진 텍스트 색상 정의 --- */
+            --background-color: #121212; /* 어두운 배경색 (짙은 회색) */
+            --hidden-text-color: #2f2e2e; /* 배경색(#333)보다 아주 약간 밝은 색 */
+        }
+
+        body {
+            background-color: var(--background-color); /* 변수 사용 */
+            color: white;          /* 기본 글자색 흰색 */
+            font-family: 'Malgun Gothic', sans-serif; /* 가독성을 위한 폰트 */
+            padding: 20px;         /* 내용과 창 가장자리 사이 여백 */
+            line-height: 1.6;      /* 줄 간격 */
+        }
+
+        /* HSL(Hue, Saturation, Lightness) 색상 모델 사용 */
+        .red    { color: hsl(0,   var(--rainbow-saturation), var(--rainbow-lightness)); } /* 빨강 */
+        .orange { color: hsl(30,  var(--rainbow-saturation), var(--rainbow-lightness)); } /* 주황 */
+        .yellow { color: hsl(55,  var(--rainbow-saturation), var(--rainbow-lightness)); } /* 노랑 */
+        .green  { color: hsl(110, var(--rainbow-saturation), var(--rainbow-lightness)); } /* 초록 */
+        .blue   { color: hsl(230, var(--rainbow-saturation), var(--rainbow-lightness)); } /* 파랑 */
+        .indigo { color: hsl(260, var(--rainbow-saturation), var(--rainbow-lightness)); } /* 남색 */
+        .violet { color: hsl(280, var(--rainbow-saturation), var(--rainbow-lightness)); } /* 보라 */
+
+        /* 강조를 위해 약간 더 굵게 표시 (선택 사항) */
+        .red, .orange, .yellow, .green, .blue, .indigo, .violet {
+            font-weight: bold;
+        }
+
+        /* 마지막 문단 스타일 */
+        .ending-line {
+            color: var(--hidden-text-color); /* 배경과 거의 유사한 색상 적용 */
+            /* 마우스로 드래그하면 보이도록 설정 (선택사항) */
+            /* user-select: none; /* 아예 선택 안되게 하려면 주석 해제 */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>상모대학 등산 동아리 이야기</h1>
+
+    <p>
+        상모대학 등산 동아리에서 있었던 일이다. 그 동아리에는 퀸카로 소문난 지희라는 1학년 여학생이 있었다. 지희가 동아리에 갓 들어왔을 때부터 남자 선배들이 연이어 고백했으나, 그녀는 <span class="red">같</span>은 해에 동아리에 함께 들어온 1학년 동년배 남학생 태호와 CC가 되었다. 내심 지희를 노리고 있었던 남자 선배들은 질투 반, 부러움 반으로 태호를 자주 골탕먹이곤 했다.
+    </p>
+
+    <p>
+        그러던 어느 날, 동아리 겨울 MT를 시골 산장으로 가게 되자 선배들은 이때다 싶어서 또 태호를 놀려먹을 계획을 세운다. 버스가 출발하기 직전에 태호를 불러세워 동아리방 청소와 문단속을 시킨 것이다. 순진한 후배는 선배들 말대로 동아리방으로 돌아갔고, 선배들을 태운 버스는 그대로 먼저 출발하고 말았다. 뒤늦게서야 속았다는 것을 눈치챈 태호는 울며 겨자먹기로 혼자 시외버스를 타고 서둘러 선배들을 뒤따라갈 수밖에 없었다. 하필이면 그 날, 지희도 집안에 중요한 일이 있어서 당장 학교로 갈 수는 없었기에 MT 장소에서 모두와 만나기로 약속했다.
+    </p>
+
+    <p>
+        다행히 일이 잘 풀려 지희는 무사히 MT에 참석할 수 있었다. 어찌된 일인지 그날따라 차가 심하게 막혀서 예정보다 훨씬 늦게 도착했지만, 그래도 이제 곧 남자친구를 만날 수 있다는 사실이 작은 위안이 되었다. 지희는 도착하자마자 태호를 제일 먼저 찾기 시작했다. 그러나 산장에는 왠지 태호가 없었고 선배들만 있었다. 지희는 여느 때처럼 밝게 웃는 얼굴로 인사를 건네고 남자친구는 어디 있느냐고 묻는다. 그런데 선배들은 인사를 받아주기는커녕 침울한 표정으로 고개를 숙이고만 있었다. 평소에는 서로 장난스레 웃고 떠들던 선배들이 모두 침묵하자 <span class="orange">지</span>희는 왠지 모르게 불안해진다. 그런 그녀의 속마음을 꿰뚫어본 듯이, 선배 한 명이 무겁게 입을 뗀다. 우리가 장난으로 태호를 떼어두고 와서 태호는 우리와 다른 버스를 타고 왔는데, 하필<span class="yellow">이</span>면 태호가 탄 버스의 버스 기사<span class="green">가</span> 졸음운전을 하는 바람에 산악도로 빙판길에서 버스가 미끄러져 추락했다고.
+    </p>
+
+    <p>
+        선배가 이<span class="blue">야</span>기를 끝마치기 무섭게, 문 밖에서 지희의 이름을 애타게 외치는 태호의 목소리가 들린다. 태호는 지희에게 문을 열어달라고 부탁하면서 미친 듯이 문을 두들긴다. 지희는 남자친구의 목소리를 듣고 당장 달려나가려 하지만, 선배들이 그녀를 붙잡는다. 선배들은 아까 선배가 한 얘기 못 들었냐, 이미 죽은 태호가 너를 저승길 길동무로 데려가려고 작정한 거라면서 지희를 극구 설득한다. 그러나 남자친구를 진정 사랑했던 지<span class="indigo">희</span>는 주변의 만류를 뿌리치고 기어이 문을 연다. 산장 문 앞에는 눈을 흠뻑 맞고 서 있는 남자친구가 서 있었다. 지희는 그리운 남자친구의 얼굴을 보자 눈물이 차올랐고, 태호는 여<span class="violet">자</span>친구를 껴안으며 무사해서 다행이라고 말한다.
+    </p>
+
+    <p>
+        도대체 무슨 소리냐고 반문하는 지희에게, 태호는 선배들이 먼저 타고 간 버스가 빙판길에서 미끄러졌다고 사정을 설명한다. 그 사고 때문에 도로가 막혀서 태호가 산장에 늦게 도착했던 것이다. 깜짝 놀란 지희가 선배들에게 어떻게 된 일이냐고 물으러 다시 산장 안으로 돌아가보니...
+    </p>
+
+    <p class="ending-line">
+        산장 안에는 아무도 없었다.
+    </p>
+
+</body>
+</html>
