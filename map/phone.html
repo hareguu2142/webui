@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T9 Converter</title>
+    <style>
+        /* Basic CSS styling */
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        h1 {
+            color: #0056b3;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"] {
+            width: calc(100% - 22px); /* Account for padding */
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+        button {
+            display: block; /* Center button */
+            margin: 0 auto 20px auto; /* Center button and add bottom margin */
+            padding: 12px 25px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #outputArea {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            min-height: 50px;
+            word-wrap: break-word; /* Ensure long numbers wrap */
+            font-family: monospace; /* Good for displaying sequences */
+            font-size: 1.1em;
+        }
+        #outputArea strong {
+             display: block;
+             margin-bottom: 10px;
+             font-weight: bold;
+             color: #333;
+             font-family: sans-serif; /* Reset font for the label */
+             font-size: 1em; /* Reset font size for the label */
+        }
+         /* Style for the code output */
+        #result.code-output {
+            font-family: sans-serif; /* Use standard font for the code */
+            color: #dc3545; /* Red color for emphasis */
+            font-weight: bold;
+        }
+        /* Style for the problem/hint section */
+        .problem-section {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #fffacd; /* Light yellow background */
+            border: 1px dashed #ccc;
+            border-radius: 5px;
+        }
+        .problem-section h2 {
+            margin-top: 0;
+            color: #8b4513; /* Brown color */
+            font-size: 1.2em;
+        }
+         .problem-section code {
+            display: block;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;       
+
+            word-wrap: break-word;
+            margin-top: 10px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    
+
+    <div class="container">
+        <h1>T9 숫자 변환기</h1>
+        <div style="text-align: center; margin-top: 20px;">
+            <img src="../source/phone.png" alt="Old Phone Image" style="max-width: 100%; height: auto; border-radius: 5px;">
+        </div>
+
+        <label for="inputText">영어 문장을 입력하세요(모든 알파벳 소문자 입니다.):</label>
+        <input type="text" id="inputText" placeholder="Enter English text here...">
+
+        <button id="convertButton">변환하기</button>
+
+        <div id="outputArea">
+            <strong>변환 결과:</strong>
+            <span id="result"></span>
+        </div>
+
+        <!-- Problem Section -->
+        <div class="problem-section">
+            <h2>문제</h2>
+            <!-- T9: THE ESSENCE OF MATHEMATICS IS FREEDOM -->
+            <code>8 44 33 0 33 7777 7777 33 66 222 33 0 666 333 0 6 2 8 44 33 6 2 8 444 222 7777 0 444 7777 0 333 777 33 33 3 666 6</code>
+         </div>
+        <!-- End Problem Section -->
+
+    </div>
+    
+
+    <script>
+        // T9 Mapping based on standard multi-tap
+        const t9Mapping = {
+          "a": { "number": "2", "presses": 1 }, "b": { "number": "2", "presses": 2 }, "c": { "number": "2", "presses": 3 },
+          "d": { "number": "3", "presses": 1 }, "e": { "number": "3", "presses": 2 }, "f": { "number": "3", "presses": 3 },
+          "g": { "number": "4", "presses": 1 }, "h": { "number": "4", "presses": 2 }, "i": { "number": "4", "presses": 3 },
+          "j": { "number": "5", "presses": 1 }, "k": { "number": "5", "presses": 2 }, "l": { "number": "5", "presses": 3 },
+          "m": { "number": "6", "presses": 1 }, "n": { "number": "6", "presses": 2 }, "o": { "number": "6", "presses": 3 },
+          "p": { "number": "7", "presses": 1 }, "q": { "number": "7", "presses": 2 }, "r": { "number": "7", "presses": 3 }, "s": { "number": "7", "presses": 4 },
+          "t": { "number": "8", "presses": 1 }, "u": { "number": "8", "presses": 2 }, "v": { "number": "8", "presses": 3 },
+          "w": { "number": "9", "presses": 1 }, "x": { "number": "9", "presses": 2 }, "y": { "number": "9", "presses": 3 }, "z": { "number": "9", "presses": 4 }
+        };
+
+        // Get references to the HTML elements
+        const inputElement = document.getElementById('inputText');
+        const convertButton = document.getElementById('convertButton');
+        const resultElement = document.getElementById('result');
+
+        // Function to convert text to T9 sequence
+        function convertToT9(text) {
+            const lowerCaseText = text.toLowerCase();
+            const resultSequences = [];
+            let lastNumber = null;
+
+            for (let i = 0; i < lowerCaseText.length; i++) {
+                const char = lowerCaseText[i];
+
+                if (char === ' ') {
+                    // Only add space '0' if the previous wasn't already '0'
+                    // And ensure there's actual content before it
+                    if (resultSequences.length > 0 && lastNumber !== '0') {
+                         resultSequences.push(' '); // Separator space before '0' if needed
+                    }
+                    resultSequences.push('0');
+                    lastNumber = '0'; // Track that the last character was a space (represented by '0')
+                } else if (t9Mapping[char]) {
+                    const mapping = t9Mapping[char];
+                    const currentNumber = mapping.number;
+                    const sequence = currentNumber.repeat(mapping.presses);
+
+                    // Add pause space if the current number is the same as the last number (and not a space '0')
+                    if (lastNumber !== null && currentNumber === lastNumber) {
+                          resultSequences.push(' '); // Pause space
+                    }
+                    // Add separator space if the previous char was not a space and not the same number key
+                    // Only add if there's something before it and the last wasn't a space already
+                    else if (resultSequences.length > 0 && lastNumber !== '0') {
+                          resultSequences.push(' '); // Separator space
+                    }
+
+                    resultSequences.push(sequence);
+                    lastNumber = currentNumber; // Track the last *number key* pressed
+                }
+                // Ignore characters not in the mapping (like punctuation, numbers, etc.)
+            }
+            // Join without extra spaces at start/end
+            return resultSequences.join('');
+        }
+
+
+        // ---- MODIFIED Event Listener ----
+        convertButton.addEventListener('click', () => {
+            const inputText = inputElement.value; // Get raw input
+            const targetPhrase = "the essence of mathematics is freedom"; // The trigger phrase
+
+            // Check if the input exactly matches the target phrase (case-sensitive)
+            if (inputText === targetPhrase) {
+                // If it matches, display the code message in the result area
+                resultElement.textContent = "CODE: cardinality";
+                resultElement.className = 'code-output'; // Apply special styling
+            } else {
+                // Otherwise, perform the normal T9 conversion
+                const t9Output = convertToT9(inputText);
+                resultElement.textContent = t9Output; // Display the T9 result
+                resultElement.className = ''; // Remove special styling if present
+            }
+        });
+
+        // Optional: Allow conversion on pressing Enter in the input field
+        inputElement.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent default form submission
+                convertButton.click(); // Trigger the button's click logic
+            }
+        });
+
+    </script>
+
+</body>
+</html>        <!-- Add a visual aid or thematic image -->
+
+    
