@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>조건부 확률 추리 게임</title>
+    <link rel="stylesheet" href="students_style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>조건부 확률 추리 게임</h1>
+        
+        <div class="game-info">
+            <p>문제: <span id="current-question">0</span> / <span id="total-questions">10</span></p>
+            <p>점수: <span id="score">0</span></p>
+        </div>
+
+        <h2>전체 학생 데이터 (100명)</h2>
+        <p class="description">아래 100명의 학생 데이터를 참고하여 퀴즈를 풀어보세요.</p>
+        <div class="table-container">
+            <table id="students-table">
+                <thead>
+                    <tr>
+                        <th>성별</th>
+                        <th>안경</th>
+                        <th>통학</th>
+                        <th>방과후수업</th>
+                    </tr>
+                </thead>
+                <tbody id="students-table-body">
+                    <!-- JavaScript로 학생 데이터가 채워집니다. -->
+                </tbody>
+            </table>
+        </div>
+
+        <hr>
+
+        <h2>퀴즈</h2>
+        <div id="quiz-area">
+            <p id="quiz-question-text">다음 학생의 ???은(는) 무엇일까요?</p>
+            <div id="known-info">
+                <!-- JavaScript로 알려진 정보가 채워집니다. -->
+            </div>
+            <div id="answer-options">
+                <!-- JavaScript로 선택 버튼들이 채워집니다. -->
+            </div>
+            <p id="feedback"></p>
+        </div>
+
+        <div id="game-result" style="display:none;">
+            <h2>게임 종료!</h2>
+            <p id="final-score-message"></p>
+            <p id="result-message"></p>
+            <button id="restart-button">다시 시작</button>
+        </div>
+    </div>
+
+    <script src="students_script.js"></script>
+</body>
+</html>

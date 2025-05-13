@@ -1,0 +1,160 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1, h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.game-info {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    font-size: 1.1em;
+    background-color: #e7f3fe;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.description {
+    text-align: center;
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
+.table-container {
+    max-height: 400px; /* 100명 데이터를 위해 조금 늘릴 수 있습니다. */
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+    position: sticky; /* 스크롤 시 헤더 고정 */
+    top: 0;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+hr {
+    margin: 30px 0;
+    border: 0;
+    border-top: 1px solid #ccc;
+}
+
+#quiz-area {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+    border: 1px solid #eee;
+}
+
+#quiz-question-text {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+#known-info p {
+    margin: 5px 0;
+    font-size: 1.1em;
+}
+#known-info strong {
+    color: #0056b3;
+}
+
+
+#answer-options button {
+    display: inline-block;
+    margin: 10px 10px 10px 0;
+    padding: 12px 20px;
+    font-size: 1em;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#answer-options button:hover {
+    background-color: #218838;
+}
+
+#answer-options button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+
+#feedback {
+    margin-top: 15px;
+    font-weight: bold;
+    min-height: 1.5em; /* 피드백 메시지 공간 확보 */
+}
+
+.correct {
+    color: green;
+}
+
+.incorrect {
+    color: red;
+}
+
+#game-result {
+    text-align: center;
+    padding: 20px;
+    background-color: #e7f3fe;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+#game-result h2 {
+    color: #007bff;
+}
+
+#restart-button {
+    padding: 10px 20px;
+    font-size: 1em;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+#restart-button:hover {
+    background-color: #0056b3;
+}
