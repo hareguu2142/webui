@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>숫자 변환기</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 500px;
+            margin: auto;
+        }
+        h1, h2 {
+            color: #333;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="number"], input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .output-container {
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+        .output-table {
+            border-collapse: collapse;
+            margin-top: 5px;
+            width: auto;
+        }
+        .output-table th, .output-table td {
+            border: 1px solid #333;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            font-size: 1.2em;
+        }
+        .button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .quiz-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ccc;
+        }
+        #feedback {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+            margin-top: -5px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>숫자 변환기</h1>
+
+        <div>
+            <label for="numberInput">숫자 입력:</label>
+            <input type="number" id="numberInput" value="1" min="0">
+            <div id="inputError" class="error-message"></div>
+        </div>
+
+        <div class="output-container">
+            <label>변환 결과:</label>
+            <table class="output-table">
+                <thead>
+                    <tr>
+                        <th colspan="5">결과 값</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="digit1"></td>
+                        <td id="digit2"></td>
+                        <td id="digit3"></td>
+                        <td id="digit4"></td>
+                        <td id="digit5"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div id="calculationError" class="error-message"></div>
+        </div>
+
+        <hr>
+
+        <div class="quiz-section">
+            <h2>퀴즈</h2>
+            <p><b>문제: 2025 → ?</b></p>
+            <label for="quizAnswer">정답 입력 (5자리 숫자):</label>
+            <input type="text" id="quizAnswer" maxlength="5" placeholder="예: 12345">
+            <button id="submitAnswer" class="button">제출</button>
+            <div id="feedback"></div>
+        </div>
+    </div>
+
+    <script>
+        const numberInputElement = document.getElementById('numberInput'); // ID 변경
+        const outputCells = [
+            document.getElementById('digit1'),
+            document.getElementById('digit2'),
+            document.getElementById('digit3'),
+            document.getElementById('digit4'),
+            document.getElementById('digit5')
+        ];
+        const inputErrorElement = document.getElementById('inputError');
+        const calculationErrorElement = document.getElementById('calculationError');
+
+        const quizAnswerElement = document.getElementById('quizAnswer');
+        const submitButton = document.getElementById('submitAnswer');
+        const feedbackElement = document.getElementById('feedback');
+
+        const FORBIDDEN_NUMBER = 2025;
+        const QUIZ_CORRECT_ANSWER = "30642"; // log10(2025) ≈ 3.3064258... -> 30642 (이 값은 내부 로직이므로 유지)
+
+        function updateConvertedOutput() { // 함수 이름 변경
+            inputErrorElement.textContent = '';
+            calculationErrorElement.textContent = '';
+            const inputValue = parseFloat(numberInputElement.value); // 변경된 ID 사용
+
+            if (inputValue === FORBIDDEN_NUMBER) {
+                inputErrorElement.textContent = `${FORBIDDEN_NUMBER}는 현재 변환기에서 직접 입력할 수 없습니다.`;
+                clearOutputTable();
+                return;
+            }
+
+            if (isNaN(inputValue) || inputValue <= 0) {
+                calculationErrorElement.textContent = '유효한 양수를 입력해주세요.';
+                clearOutputTable();
+                return;
+            }
+
+            try {
+                // 내부적으로는 로그 계산을 수행
+                const secretValue = Math.log10(inputValue);
+                if (!isFinite(secretValue)) {
+                     calculationErrorElement.textContent = '변환 규칙 적용 중 오류가 발생했습니다.';
+                     clearOutputTable();
+                     return;
+                }
+
+                // 소수점 7자리까지 구하기
+                const valueStrWith7Decimals = secretValue.toFixed(7);
+
+                // 소수점 부분만 추출
+                const decimalPart = valueStrWith7Decimals.split('.')[1] || "0000000";
+
+                // 앞 5자리 가져오기
+                const firstFiveDigits = decimalPart.substring(0, 5);
+
+                for (let i = 0; i < 5; i++) {
+                    outputCells[i].textContent = firstFiveDigits[i] || '0';
+                }
+            } catch (error) {
+                calculationErrorElement.textContent = '변환 중 오류가 발생했습니다.';
+                clearOutputTable();
+            }
+        }
+
+        function clearOutputTable() {
+            outputCells.forEach(cell => cell.textContent = '');
+        }
+
+        function checkQuizAnswer() {
+            const userAnswer = quizAnswerElement.value.trim();
+            if (userAnswer === QUIZ_CORRECT_ANSWER) {
+                feedbackElement.textContent = '정답입니다! 🎉 규칙을 파악하셨군요!';
+                feedbackElement.className = 'correct';
+            } else if (userAnswer === '') {
+                feedbackElement.textContent = '답을 입력해주세요.';
+                feedbackElement.className = 'incorrect';
+            } else if (userAnswer.length !== 5 || !/^\d+$/.test(userAnswer)) {
+                feedbackElement.textContent = '답은 5자리 숫자로 입력해주세요.';
+                feedbackElement.className = 'incorrect';
+            }
+            else {
+                feedbackElement.textContent = '오답입니다. 다시 시도해보세요!';
+                feedbackElement.className = 'incorrect';
+            }
+        }
+
+        // 이벤트 리스너 연결
+        numberInputElement.addEventListener('input', updateConvertedOutput); // 변경된 함수 이름, ID 사용
+        submitButton.addEventListener('click', checkQuizAnswer);
+        quizAnswerElement.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                checkQuizAnswer();
+            }
+        });
+
+
+        // 페이지 로드 시 초기값으로 한 번 실행
+        document.addEventListener('DOMContentLoaded', updateConvertedOutput); // 변경된 함수 이름 사용
+    </script>
+</body>
+</html>
