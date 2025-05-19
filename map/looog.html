@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>숫자 변환기</title>
+    <!-- KaTeX CSS (from '빈 페이지') -->
+    <link href="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" rel="stylesheet"/>
     <style>
         body {
             font-family: sans-serif;
@@ -87,6 +89,11 @@
             margin-top: -5px;
             margin-bottom: 10px;
         }
+        /* KaTeX specific styling if needed, for example: */
+        .katex-display { /* To center display math if it's not by default */
+            margin: 1em 0;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -124,7 +131,8 @@
 
         <div class="quiz-section">
             <h2>퀴즈</h2>
-            <p><b>문제: 2025 → ?</b></p>
+            <!-- Modified quiz question to use KaTeX -->
+            <p><b>문제: $$2025 \rightarrow ?$$</b></p>
             <label for="quizAnswer">정답 입력 (5자리 숫자):</label>
             <input type="text" id="quizAnswer" maxlength="5" placeholder="예: 12345">
             <button id="submitAnswer" class="button">제출</button>
@@ -132,8 +140,12 @@
         </div>
     </div>
 
+    <!-- KaTeX JS (from '빈 페이지') -->
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js"></script>
+
     <script>
-        const numberInputElement = document.getElementById('numberInput'); // ID 변경
+        const numberInputElement = document.getElementById('numberInput');
         const outputCells = [
             document.getElementById('digit1'),
             document.getElementById('digit2'),
@@ -149,12 +161,12 @@
         const feedbackElement = document.getElementById('feedback');
 
         const FORBIDDEN_NUMBER = 2025;
-        const QUIZ_CORRECT_ANSWER = "30642"; // log10(2025) ≈ 3.3064258... -> 30642 (이 값은 내부 로직이므로 유지)
+        const QUIZ_CORRECT_ANSWER = "30642";
 
-        function updateConvertedOutput() { // 함수 이름 변경
+        function updateConvertedOutput() {
             inputErrorElement.textContent = '';
             calculationErrorElement.textContent = '';
-            const inputValue = parseFloat(numberInputElement.value); // 변경된 ID 사용
+            const inputValue = parseFloat(numberInputElement.value);
 
             if (inputValue === FORBIDDEN_NUMBER) {
                 inputErrorElement.textContent = `${FORBIDDEN_NUMBER}는 현재 변환기에서 직접 입력할 수 없습니다.`;
@@ -169,21 +181,14 @@
             }
 
             try {
-                // 내부적으로는 로그 계산을 수행
                 const secretValue = Math.log10(inputValue);
                 if (!isFinite(secretValue)) {
                      calculationErrorElement.textContent = '변환 규칙 적용 중 오류가 발생했습니다.';
                      clearOutputTable();
                      return;
                 }
-
-                // 소수점 7자리까지 구하기
                 const valueStrWith7Decimals = secretValue.toFixed(7);
-
-                // 소수점 부분만 추출
                 const decimalPart = valueStrWith7Decimals.split('.')[1] || "0000000";
-
-                // 앞 5자리 가져오기
                 const firstFiveDigits = decimalPart.substring(0, 5);
 
                 for (let i = 0; i < 5; i++) {
@@ -217,8 +222,7 @@
             }
         }
 
-        // 이벤트 리스너 연결
-        numberInputElement.addEventListener('input', updateConvertedOutput); // 변경된 함수 이름, ID 사용
+        numberInputElement.addEventListener('input', updateConvertedOutput);
         submitButton.addEventListener('click', checkQuizAnswer);
         quizAnswerElement.addEventListener('keypress', function(event) {
             if (event.key === 'Enter') {
@@ -226,9 +230,18 @@
             }
         });
 
-
-        // 페이지 로드 시 초기값으로 한 번 실행
-        document.addEventListener('DOMContentLoaded', updateConvertedOutput); // 변경된 함수 이름 사용
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize KaTeX rendering (from '빈 페이지')
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false}
+                ]
+            });
+            
+            // Original DOMContentLoaded logic
+            updateConvertedOutput();
+        });
     </script>
 </body>
 </html>
