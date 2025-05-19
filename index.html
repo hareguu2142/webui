@@ -126,7 +126,6 @@
             <p>아래 링크를 클릭하여 코드를 제출해주세요.</p>
             <p class="submit-link">
                 <a href="https://script.google.com/macros/s/AKfycbyTNYm6HeZJ03qdMwWM3mSWgt1s8qwJvDtJdJO92gSWl1ZsxUyNnBLDZwPyY5P6O5Vs3g/exec" target="_blank" rel="noopener noreferrer">코드 제출하러 가기</a>
-                <!-- Added target="_blank" to open in new tab -->
             </p>
         </section>
 
@@ -134,20 +133,28 @@
         <section class="map-links">
             <h2>지도 관련 페이지 링크</h2>
             <ul>
-                <li><a href="map/first.html">first.html</a></li>
+                <li><a href="map/darkstory.html">darkstory.html</a></li>
+                <li><a href="map/gcd.html">gcd.html</a></li>
+                <li><a href="map/looog.html">looog.html</a></li>
                 <li><a href="map/philosophy.html">philosophy.html</a></li>
-                <li><a href="map/start.html">start.html</a></li>
-                <li><a href="map/table.html">table.html</a></li>
-                <li><a href="map/table_sample.html">table_sample.html</a></li>
+                <li><a href="map/phone.html">phone.html</a></li>
+                <li><a href="map/set.html">set.html</a></li>
+                <li><a href="map/students.html">students.html</a></li>
+                <!-- Non-HTML files like .mp3, .txt, .json, .js, .css are typically not linked directly for viewing as pages.
+                     They are resources used by the HTML pages. If you need to link to them for download or direct viewing,
+                     you can add them similarly, but it's less common in a "page links" section.
+                     For example: <li><a href="map/list.txt">list.txt (Text File)</a></li>
+                                  <li><a href="map/gcd.mp3">gcd.mp3 (Audio File)</a></li>
+                -->
             </ul>
         </section>
 
         <!-- Section 3: Move Script Input/Button -->
         <section class="move-section">
-             <h2>이동 기능 (Test)</h2> <!-- Added a heading for context -->
+             <h2>이동 기능 (Test)</h2>
              <input type="text" id="myInput" name="myInput" placeholder="이동할 값 입력...">
              <button id="submitBtn">이동</button>
-             <script src="js/move.js"></script> <!-- Script moved to end of body (best practice) -->
+             <script src="js/move.js"></script> <!-- This script is sourced from the 'js' folder, not 'map' -->
         </section>
 
     </div> <!-- End Container -->

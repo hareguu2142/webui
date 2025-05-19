@@ -1,0 +1,17 @@
+darkstory.html
+first.html
+gcd.html
+gcd.mp3
+list.txt
+looog.html
+move.js
+philosophy.html
+phone.html
+set.html
+start.html
+students.html
+students_data.json
+students_script.js
+students_style.css
+table.html
+table_sample.html

@@ -48,6 +48,38 @@
             /* 마우스로 드래그하면 보이도록 설정 (선택사항) */
             /* user-select: none; /* 아예 선택 안되게 하려면 주석 해제 */
         }
+
+        /* 추가된 스타일 */
+        .input-area {
+            margin-top: 20px; /* 위쪽 문단과의 간격 */
+            display: flex;    /* 요소들을 가로로 나열 */
+            align-items: center; /* 수직 정렬 */
+        }
+        .input-area input[type="text"] {
+            padding: 8px;
+            margin-right: 10px;
+            border: 1px solid #555;
+            background-color: #333;
+            color: white;
+            border-radius: 4px;
+        }
+        .input-area button {
+        padding: 8px 15px;
+        background-color: #ff0000; /* 빨간색 Hex 코드 */
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+        .input-area button:hover {
+            background-color: #cc0000; /* 마우스를 올렸을 때 약간 더 진한 빨간색 */
+        }
+        .result-text {
+            color: red;
+            margin-left: 10px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -55,7 +87,7 @@
     <h1>상모대학 등산 동아리 이야기</h1>
 
     <p>
-        상모대학 등산 동아리에서 있었던 일이다. 그 동아리에는 퀸카로 소문난 지희라는 1학년 여학생이 있었다. 지희가 동아리에 갓 들어왔을 때부터 남자 선배들이 연이어 고백했으나, 그녀는 <span class="red">같</span>은 해에 동아리에 함께 들어온 1학년 동년배 남학생 태호와 CC가 되었다. 내심 지희를 노리고 있었던 남자 선배들은 질투 반, 부러움 반으로 태호를 자주 골탕먹이곤 했다.
+        상모대학 등산 동아리에서 있었던 일이다. 그 동아리에는 예쁘기로로 소문난 지희라는 1학년 여학생이 있었다. 지희가 동아리에 갓 들어왔을 때부터 남자 선배들이 연이어 고백했으나, 그녀는 <span class="red">지</span>은 해에 동아리에 함께 들어온 1학년 동년배 남학생 태호와 CC가 되었다. 내심 지희를 노리고 있었던 남자 선배들은 질투 반, 부러움 반으로 태호를 자주 골탕먹이곤 했다.
     </p>
 
     <p>
@@ -63,11 +95,11 @@
     </p>
 
     <p>
-        다행히 일이 잘 풀려 지희는 무사히 MT에 참석할 수 있었다. 어찌된 일인지 그날따라 차가 심하게 막혀서 예정보다 훨씬 늦게 도착했지만, 그래도 이제 곧 남자친구를 만날 수 있다는 사실이 작은 위안이 되었다. 지희는 도착하자마자 태호를 제일 먼저 찾기 시작했다. 그러나 산장에는 왠지 태호가 없었고 선배들만 있었다. 지희는 여느 때처럼 밝게 웃는 얼굴로 인사를 건네고 남자친구는 어디 있느냐고 묻는다. 그런데 선배들은 인사를 받아주기는커녕 침울한 표정으로 고개를 숙이고만 있었다. 평소에는 서로 장난스레 웃고 떠들던 선배들이 모두 침묵하자 <span class="orange">지</span>희는 왠지 모르게 불안해진다. 그런 그녀의 속마음을 꿰뚫어본 듯이, 선배 한 명이 무겁게 입을 뗀다. 우리가 장난으로 태호를 떼어두고 와서 태호는 우리와 다른 버스를 타고 왔는데, 하필<span class="yellow">이</span>면 태호가 탄 버스의 버스 기사<span class="green">가</span> 졸음운전을 하는 바람에 산악도로 빙판길에서 버스가 미끄러져 추락했다고.
+        다행히 일이 잘 풀려 지희는 무사히 MT에 참석할 수 있었다. 어찌된 일인지 그날따라 차가 심하게 막혀서 예정보다 훨씬 늦게 도착했지만, 그래도 이제 곧 남자친구를 만날 수 있다는 사실이 작은 위안이 되었다. 지희는 도착하자마자 태호를 제일 먼저 찾기 시작했다. 그러나 산장에는 왠지 태호가 없었고 선배들만 있었다. 지희는 여느 때처럼 밝게 웃는 얼굴로 인사를 건네고 남자친구는 어디 있느냐고 묻는다. 그런데 선배들은 인사를 받아주기는커녕 침울한 표정으로 고개를 숙이고만 있었다. 평소에는 서로 장난스레 웃고 떠들던 선배들이 모두 침묵하자 <span class="orange">희</span>희는 왠지 모르게 불안해진다. 그런 그녀의 속마음을 꿰뚫어본 듯이, 선배 한 명이 무겁게 입을 뗀다. 우리가 장난으로 태호를 떼어두고 와서 태호는 우리와 다른 버스를 타고 왔는데, 하필<span class="yellow">야</span>면 태호가 탄 버스의 버스 기사<span class="green">같</span> 졸음운전을 하는 바람에 산악도로 빙판길에서 버스가 미끄러져 추락했다고.
     </p>
 
     <p>
-        선배가 이<span class="blue">야</span>기를 끝마치기 무섭게, 문 밖에서 지희의 이름을 애타게 외치는 태호의 목소리가 들린다. 태호는 지희에게 문을 열어달라고 부탁하면서 미친 듯이 문을 두들긴다. 지희는 남자친구의 목소리를 듣고 당장 달려나가려 하지만, 선배들이 그녀를 붙잡는다. 선배들은 아까 선배가 한 얘기 못 들었냐, 이미 죽은 태호가 너를 저승길 길동무로 데려가려고 작정한 거라면서 지희를 극구 설득한다. 그러나 남자친구를 진정 사랑했던 지<span class="indigo">희</span>는 주변의 만류를 뿌리치고 기어이 문을 연다. 산장 문 앞에는 눈을 흠뻑 맞고 서 있는 남자친구가 서 있었다. 지희는 그리운 남자친구의 얼굴을 보자 눈물이 차올랐고, 태호는 여<span class="violet">자</span>친구를 껴안으며 무사해서 다행이라고 말한다.
+        선배가 이<span class="blue">이</span>기를 끝마치기 무섭게, 문 밖에서 지희의 이름을 애타게 외치는 태호의 목소리가 들린다. 태호는 지희에게 문을 열어달라고 부탁하면서 미친 듯이 문을 두들긴다. 지희는 남자친구의 목소리를 듣고 당장 달려나가려 하지만, 선배들이 그녀를 붙잡는다. 선배들은 아까 선배가 한 얘기 못 들었냐, 이미 죽은 태호가 너를 저승길 길동무로 데려가려고 작정한 거라면서 지희를 극구 설득한다. 그러나 남자친구를 진정 사랑했던 지<span class="indigo">가</span>는 주변의 만류를 뿌리치고 기어이 문을 연다. 산장 문 앞에는 눈을 흠뻑 맞고 서 있는 남자친구가 서 있었다. 지희는 그리운 남자친구의 얼굴을 보자 눈물이 차올랐고, 태호는 여<span class="violet">자</span>친구를 껴안으며 무사해서 다행이라고 말한다.
     </p>
 
     <p>
@@ -77,6 +109,38 @@
     <p class="ending-line">
         산장 안에는 아무도 없었다.
     </p>
+
+    <!-- 추가된 입력 영역 -->
+    <div class="input-area">
+        <input type="text" id="secretInput" placeholder="정답을 입력하세요">
+        <button id="submitButton">제출</button>
+        <span id="resultMessage" class="result-text"></span>
+    </div>
+
+    <script>
+        // 스크립트는 body 태그가 닫히기 직전에 위치하는 것이 좋습니다.
+        // DOM 요소들이 모두 로드된 후에 스크립트가 실행되도록 하기 위함입니다.
+        const secretInput = document.getElementById('secretInput');
+        const submitButton = document.getElementById('submitButton');
+        const resultMessage = document.getElementById('resultMessage');
+
+        submitButton.addEventListener('click', function() {
+            const inputValue = secretInput.value; // 입력된 값 가져오기
+            
+            if (inputValue === '지희야같이가자') {
+                resultMessage.textContent = 'ghost';
+            } else {
+                resultMessage.textContent = '아니야!';
+            }
+        });
+
+        // 엔터 키로도 제출 가능하게 (선택 사항)
+        secretInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                submitButton.click(); // 제출 버튼 클릭 이벤트 강제 발생
+            }
+        });
+    </script>
 
 </body>
 </html>
