@@ -48,6 +48,28 @@
             /* 마우스로 드래그하면 보이도록 설정 (선택사항) */
             /* user-select: none; /* 아예 선택 안되게 하려면 주석 해제 */
         }
+
+        /* 추가된 스타일 */
+        #answerSection input[type="text"], #answerSection button {
+            padding: 8px;
+            margin-right: 5px;
+            border-radius: 4px;
+            border: 1px solid #555;
+            background-color: #333;
+            color: white;
+        }
+        #answerSection button {
+            cursor: pointer;
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        #answerSection button:hover {
+            background-color: #0056b3;
+        }
+        #feedbackSpan {
+            margin-left: 10px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -74,9 +96,51 @@
         도대체 무슨 소리냐고 반문하는 지희에게, 태호는 선배들이 먼저 타고 간 버스가 빙판길에서 미끄러졌다고 사정을 설명한다. 그 사고 때문에 도로가 막혀서 태호가 산장에 늦게 도착했던 것이다. 깜짝 놀란 지희가 선배들에게 어떻게 된 일이냐고 물으러 다시 산장 안으로 돌아가보니...
     </p>
 
-    <p class="ending-line">
-        산장 안에는 아무도 없었다.
-    </p>
+    <p id="finalEndingMessage" style="display: none;"></p>
+
+    <div id="answerSection" style="margin-top: 30px; padding-bottom: 20px;">
+        <input type="text" id="answerInput" placeholder="답을 입력하세요">
+        <button id="submitAnswer">제출</button>
+        <span id="feedbackSpan"></span>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const submitButton = document.getElementById('submitAnswer');
+            const answerInput = document.getElementById('answerInput');
+            const feedbackSpan = document.getElementById('feedbackSpan');
+            const finalMessageParagraph = document.getElementById('finalEndingMessage');
+
+            const correctAnswer = '지희야같이가자';
+
+            submitButton.addEventListener('click', function() {
+                const userAnswer = answerInput.value.trim();
+
+                if (userAnswer === correctAnswer) {
+                    finalMessageParagraph.textContent = '산장 안에는 아무도 없었다.';
+                    finalMessageParagraph.style.fontWeight = 'bold';
+                    finalMessageParagraph.style.color = 'red';
+                    finalMessageParagraph.style.display = 'block';
+                    
+                    feedbackSpan.textContent = 'CODE:ghost';
+                    feedbackSpan.style.color = 'inherit'; // 기본 텍스트 색상(흰색) 사용
+                } else {
+                    finalMessageParagraph.textContent = ''; // 내용 지우기
+                    finalMessageParagraph.style.display = 'none'; // 숨기기
+                    
+                    feedbackSpan.textContent = '아니야!';
+                    feedbackSpan.style.color = 'red'; // 빨간색으로 표시
+                }
+            });
+
+            // 엔터 키로 제출 기능 추가
+            answerInput.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    submitButton.click();
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>
