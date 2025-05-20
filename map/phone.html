@@ -138,7 +138,7 @@
     
 
     <script>
-        // T9 Mapping based on standard multi-tap
+            // T9 Mapping based on standard multi-tap
         const t9Mapping = {
           "a": { "number": "2", "presses": 1 }, "b": { "number": "2", "presses": 2 }, "c": { "number": "2", "presses": 3 },
           "d": { "number": "3", "presses": 1 }, "e": { "number": "3", "presses": 2 }, "f": { "number": "3", "presses": 3 },
@@ -155,44 +155,44 @@
         const convertButton = document.getElementById('convertButton');
         const resultElement = document.getElementById('result');
 
-        // Function to convert text to T9 sequence
+        // ---- MODIFIED convertToT9 Function ----
         function convertToT9(text) {
             const lowerCaseText = text.toLowerCase();
             const resultSequences = [];
-            let lastNumber = null;
+            // lastPushedKey는 실제로 resultSequences에 마지막으로 추가된 T9 *키*를 추적합니다.
+            // (예: '2', '3', ..., '9', 또는 공백을 위한 '0').
+            // 이 변수는 현재 코드 로직에서 필수는 아니지만, 더 복잡한 T9 규칙 (예: 동일 키 연속 입력 시 자동 대기)을 구현할 때 유용할 수 있습니다.
+            // 현재의 단순화된 로직에서는 직접 사용되지 않아도 괜찮습니다.
+            // let lastPushedKey = null; 
 
             for (let i = 0; i < lowerCaseText.length; i++) {
                 const char = lowerCaseText[i];
 
                 if (char === ' ') {
-                    // Only add space '0' if the previous wasn't already '0'
-                    // And ensure there's actual content before it
-                    if (resultSequences.length > 0 && lastNumber !== '0') {
-                         resultSequences.push(' '); // Separator space before '0' if needed
+                    // resultSequences가 비어있지 않다면, '0'을 추가하기 전에 공백 구분자를 추가합니다.
+                    if (resultSequences.length > 0) {
+                        resultSequences.push(' ');
                     }
                     resultSequences.push('0');
-                    lastNumber = '0'; // Track that the last character was a space (represented by '0')
+                    // lastPushedKey = '0'; // lastPushedKey를 업데이트한다면 여기서 합니다.
                 } else if (t9Mapping[char]) {
                     const mapping = t9Mapping[char];
-                    const currentNumber = mapping.number;
-                    const sequence = currentNumber.repeat(mapping.presses);
+                    const currentKey = mapping.number; // 현재 문자의 T9 키
+                    const sequence = currentKey.repeat(mapping.presses); // 현재 문자의 T9 숫자 시퀀스
 
-                    // Add pause space if the current number is the same as the last number (and not a space '0')
-                    if (lastNumber !== null && currentNumber === lastNumber) {
-                          resultSequences.push(' '); // Pause space
+                    // resultSequences가 비어있지 않다면, 현재 시퀀스를 추가하기 전에 공백 구분자를 추가합니다.
+                    // 이 공백은 이전 문자와 현재 문자 사이의 구분자 역할을 하며,
+                    // T9 표준에서 같은 키를 연속으로 누를 때 필요한 '대기' 공백 역할도 겸합니다.
+                    if (resultSequences.length > 0) {
+                        resultSequences.push(' ');
                     }
-                    // Add separator space if the previous char was not a space and not the same number key
-                    // Only add if there's something before it and the last wasn't a space already
-                    else if (resultSequences.length > 0 && lastNumber !== '0') {
-                          resultSequences.push(' '); // Separator space
-                    }
-
                     resultSequences.push(sequence);
-                    lastNumber = currentNumber; // Track the last *number key* pressed
+                    // lastPushedKey = currentKey; // lastPushedKey를 업데이트한다면 여기서 합니다.
                 }
-                // Ignore characters not in the mapping (like punctuation, numbers, etc.)
+                // 매핑에 없는 문자(특수문자, 숫자 등)는 무시합니다.
             }
-            // Join without extra spaces at start/end
+            // 배열의 모든 요소를 빈 문자열로 합칩니다.
+            // resultSequences 배열은 이미 ['444', ' ', '0', ' ', '555', ...] 와 같이 공백을 포함하고 있습니다.
             return resultSequences.join('');
         }
 
