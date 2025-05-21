@@ -35,26 +35,77 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px; /* 슬라이더 간격 증가 */
+            gap: 10px; /* 슬라이더와 입력 그룹 간 간격 */
             background-color: #fff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 450px; /* 컨트롤 전체 너비 */
         }
         .slider-container {
             display: flex;
             align-items: center;
             gap: 10px;
             width: 100%;
-            max-width: 400px; /* 슬라이더 최대 너비 */
         }
         .slider-container label {
-            min-width: 80px; /* 레이블 너비 고정 */
+            min-width: 110px; /* 레이블 너비 고정 */
             font-weight: bold;
+            font-size: 0.9em;
         }
         .slider-container input[type="range"] {
             flex-grow: 1;
         }
+        .slider-container span {
+            min-width: 30px;
+            text-align: right;
+        }
+
+        /* New styles for input fields and button */
+        .input-group-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            margin-top: 10px; /* 슬라이더 그룹과의 간격 */
+        }
+        .input-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+        .input-container label {
+            min-width: 110px; /* 슬라이더 레이블과 너비 통일 */
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        .input-container input[type="number"] {
+            flex-grow: 1;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            max-width: 150px; /* 입력 필드 최대 너비 */
+        }
+        #submitValuesButton {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px; /* 입력 필드 그룹과의 간격 */
+            width: 100%;
+            max-width: 200px; /* 버튼 최대 너비 */
+            align-self: center; /* 버튼 중앙 정렬 */
+        }
+        #submitValuesButton:hover {
+            background-color: #45a049;
+        }
+        /* End new styles */
+
         #infoPanel {
             margin-top: 15px;
             padding: 10px;
@@ -64,23 +115,19 @@
         }
         h1 {
             color: #333;
-            margin-bottom: 5px; /* 수식과의 간격 조정 */
+            margin-bottom: 5px;
         }
-        /* p5.js가 생성하는 p 태그 스타일링 */
         .p5-text {
             font-size: 16px;
             margin: 5px 0;
         }
-
-        /* Style for KaTeX rendered math */
         .math-equation-display {
-            font-size: 1.3em; /* 수식 폰트 크기 조절 */
+            font-size: 1.3em;
             color: #333;
             margin-top: 0px;
-            margin-bottom: 15px; /* 캔버스와의 간격 */
+            margin-bottom: 15px;
             text-align: center;
         }
-        /* KaTeX 에러 메시지 숨기기 (선택 사항) */
         .katex-error {
             display: none !important;
         }
@@ -88,22 +135,33 @@
 </head>
 <body>
     <h1>라디오 주파수 맞추기 📻</h1>
-    <!-- Modified equation display -->
     <div class="math-equation-display">$$2333x - 2025y = 1$$</div>
 
     <div id="canvas-container"></div>
 
     <div class="controls">
         <div class="slider-container">
-            <label for="xSlider">X 값 (10-1000): </label>
+            <label for="xSlider">X 값 (슬라이더):</label>
             <input type="range" id="xSlider" min="10" max="1000" value="10">
             <span id="xValue">10</span>
         </div>
         <div class="slider-container">
-            <label for="ySlider">Y 값 (10-1000): </label>
+            <label for="ySlider">Y 값 (슬라이더):</label>
             <input type="range" id="ySlider" min="10" max="1000" value="10">
             <span id="yValue">10</span>
         </div>
+
+        <div class="input-group-container">
+            <div class="input-container">
+                <label for="xInput">X 직접 입력:</label>
+                <input type="number" id="xInput" min="10" max="1000" value="10">
+            </div>
+            <div class="input-container">
+                <label for="yInput">Y 직접 입력:</label>
+                <input type="number" id="yInput" min="10" max="1000" value="10">
+            </div>
+        </div>
+        <button id="submitValuesButton">입력 값 적용</button>
     </div>
 
     <div id="infoPanel">
@@ -115,6 +173,9 @@
         let xSlider, ySlider;
         let xValueDisplay, yValueDisplay;
         let equationResultDisplay, statusMessageDisplay;
+
+        // New elements for direct input
+        let xInput, yInput, submitButton;
 
         let noise, sineWave;
         let successSound;
@@ -148,40 +209,49 @@
             equationResultDisplay = select('#equationResult');
             statusMessageDisplay = select('#statusMessage');
 
-            xSlider.input(updateValues);
-            ySlider.input(updateValues);
+            // Select new input elements
+            xInput = select('#xInput');
+            yInput = select('#yInput');
+            submitButton = select('#submitValuesButton');
+
+            // Initialize input field values from sliders
+            xInput.value(xSlider.value());
+            yInput.value(ySlider.value());
+
+            // Event listeners
+            xSlider.input(handleSliderInputChange);
+            ySlider.input(handleSliderInputChange);
+            submitButton.mousePressed(handleSubmitButtonClick);
 
             noise = new p5.Noise('white');
             noise.amp(0);
-            // noise.start(); // Start noise only after user interaction
 
             sineWave = new p5.Oscillator('sine');
             sineWave.freq(440);
             sineWave.amp(0);
-            // sineWave.start(); // Start sine only after user interaction
 
-            updateValues();
+            updateValues(); // Initial update
         }
 
         function draw() {
             if (isSolved) {
                 background(150, 250, 150);
             } else {
-                let valX = xSlider.value();
-                let valY = ySlider.value();
+                let valX = parseInt(xSlider.value()); // Use parseInt for safety
+                let valY = parseInt(ySlider.value());
                 let distToSolution = abs(valX - CORRECT_X) + abs(valY - CORRECT_Y);
-                let maxDist = (1000 - 10) + (1000 - 10);
-                let closeness = map(distToSolution, 0, maxDist, 255, 50);
+                let maxDist = (1000 - 10) + (1000 - 10); // Max possible distance
+                let closeness = map(distToSolution, 0, maxDist, 255, 50); // Closer = brighter (higher first value)
                 background(closeness, 150, 200);
             }
 
             fill(0);
             textSize(16);
             textAlign(CENTER, CENTER);
+            let currentCalc = 2333 * parseInt(xSlider.value()) - 2025 * parseInt(ySlider.value());
             text(`X: ${xSlider.value()}, Y: ${ySlider.value()}`, width / 2, height / 2 - 20);
-
-            let currentCalc = 2333 * xSlider.value() - 2025 * ySlider.value();
             text(`2333x - 2025y = ${currentCalc}`, width / 2, height / 2 + 20);
+
 
             if (isSolved) {
                 fill(0, 100, 0);
@@ -189,30 +259,60 @@
                 text("!", width/2, height - 30);
             }
         }
+        
+        function handleSliderInputChange() {
+            // Update the corresponding number input field when a slider changes
+            if (this.elt.id === 'xSlider') {
+                xInput.value(this.value());
+            } else if (this.elt.id === 'ySlider') {
+                yInput.value(this.value());
+            }
+            updateValues();
+        }
+
+        function handleSubmitButtonClick() {
+            let inputXVal = parseInt(xInput.value());
+            let inputYVal = parseInt(yInput.value());
+
+            // Validate and constrain input values
+            inputXVal = constrain(inputXVal, 10, 1000);
+            inputYVal = constrain(inputYVal, 10, 1000);
+            
+            // Update input fields with constrained values (in case they were out of bounds)
+            xInput.value(inputXVal);
+            yInput.value(inputYVal);
+
+            // Update sliders with these new values
+            xSlider.value(inputXVal);
+            ySlider.value(inputYVal);
+
+            updateValues();
+        }
+
 
         function updateValues() {
-            let currentX = parseInt(xSlider.value());
+            let currentX = parseInt(xSlider.value()); // Values are always read from sliders
             let currentY = parseInt(ySlider.value());
 
-            xValueDisplay.html(currentX);
+            xValueDisplay.html(currentX); // Update slider's span display
             yValueDisplay.html(currentY);
 
             let result = 2333 * currentX - 2025 * currentY;
-            equationResultDisplay.html('음..');
+            equationResultDisplay.html(`계산 결과: 2333(${currentX}) - 2025(${currentY}) = ${result}`);
 
-            // Ensure audio context is running before trying to play sounds
+
             if (getAudioContext().state !== 'running') {
                 statusMessageDisplay.html("화면을 클릭하여 오디오를 활성화하세요.");
                 statusMessageDisplay.style('color', 'blue');
-                return; // Don't proceed with sound logic if audio context isn't active
+                statusMessageDisplay.style('font-weight', 'normal');
+                return;
             }
-
 
             if (currentX === CORRECT_X && currentY === CORRECT_Y) {
                 if (result === TARGET_RESULT) {
                     if (!isSolved) {
                         isSolved = true;
-                        statusMessageDisplay.html("방송이 선명하게 들린다.");
+                        statusMessageDisplay.html("방송이 선명하게 들린다!");
                         statusMessageDisplay.style('color', 'green');
                         statusMessageDisplay.style('font-weight', 'bold');
 
@@ -220,28 +320,27 @@
                         sineWave.amp(0, 0.5);
 
                         if (successSound.isLoaded()) {
-                            if (!successSound.isPlaying()){ // 중복 재생 방지
+                            if (!successSound.isPlaying()){
                                 successSound.loop();
                             }
                         } else {
                             console.warn("Success sound is not loaded yet.");
                         }
                     }
-                } else {
+                } else { // Correct X, Y but calculation is off (should not happen with this equation)
                     if (isSolved) {
                          isSolved = false;
                          if (successSound.isLoaded() && successSound.isPlaying()) {
                             successSound.stop();
                         }
                     }
-                    statusMessageDisplay.html(`결과값이 ${TARGET_RESULT}이 아닙니다. (현재: ${result})`);
+                    statusMessageDisplay.html(`X, Y는 맞지만 결과(${result})가 ${TARGET_RESULT}이(가) 아닙니다. (오류)`);
                     statusMessageDisplay.style('color', 'orange');
                     statusMessageDisplay.style('font-weight', 'normal');
-
                     noise.amp(0.1, 0.5);
                     sineWave.amp(0, 0.5);
                 }
-            } else {
+            } else { // X or Y (or both) are incorrect
                 if (isSolved) {
                     isSolved = false;
                     if (successSound.isLoaded() && successSound.isPlaying()) {
@@ -252,10 +351,16 @@
                 statusMessageDisplay.style('color', 'red');
                 statusMessageDisplay.style('font-weight', 'normal');
 
-                let distance = abs(result - TARGET_RESULT);
-                let noiseLevel = map(distance, 0, 500000, 0.05, 0.4, true);
+                let distanceToTargetValue = abs(result - TARGET_RESULT);
+                // Map distance from target value (1) to noise level
+                // A large distance (e.g., 500000) should give max noise.
+                // A small distance (e.g., 0 or close to 0, but not 1 yet) should give min noise.
+                // We consider being off by 1 (result is 0 or 2) as still needing tuning.
+                // Max possible result diff can be large: 2333*1000 - 2025*10 approx 2.3M
+                // Or 2333*10 - 2025*1000 approx -2M
+                let noiseLevel = map(distanceToTargetValue, 0, 1000000, 0.05, 0.4, true); // Adjusted range
                 noise.amp(noiseLevel, 0.2);
-                sineWave.amp(0, 0.5);
+                sineWave.amp(0, 0.5); // Keep sine wave off unless solved or specific condition
             }
         }
 
@@ -263,38 +368,42 @@
             if (getAudioContext().state !== 'running') {
                 getAudioContext().resume().then(() => {
                     console.log('AudioContext resumed.');
-                    if (!noise.started) { // p5.sound property to check if started
+                    if (!noise.started) {
                         noise.start();
-                        noise.amp(0); // Start silent
+                        noise.amp(0);
                         console.log("Noise started");
                     }
-                    if (!sineWave.oscillator) { // Check if oscillator exists (p5 way to see if it's set up)
+                    if (!sineWave.oscillator) {
                          sineWave.start();
-                         sineWave.amp(0); // Start silent
+                         sineWave.amp(0);
                          console.log("SineWave started");
                     }
-                    updateValues(); // Re-evaluate state after audio starts
+                    updateValues();
                 }).catch(e => console.error("Error resuming AudioContext:", e));
             }
         }
 
         function touchStarted() {
             startAudio();
-            return false; // Prevent default browser behavior
+            return false;
         }
 
         function mousePressed() {
-            startAudio();
+            // Allow clicking on canvas or other elements to start audio
+            // Check if the click is on a slider, input, or button to prevent default p5 behavior if needed
+            // For now, any click outside of specific interactive elements might be okay.
+            // if (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height) { // only if click is on canvas
+                 startAudio();
+            // }
         }
 
-        // KaTeX auto-render initialization
         document.addEventListener("DOMContentLoaded", function() {
             renderMathInElement(document.body, {
                 delimiters: [
                     {left: "$$", right: "$$", display: true},
                     {left: "$", right: "$", display: false}
                 ],
-                throwOnError: false // Prevents errors from stopping script execution
+                throwOnError: false
             });
         });
     </script>
