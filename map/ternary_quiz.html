@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>삼진법 퀴즈</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: auto;
+        }
+        h1, h2 {
+            color: #333;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .rules, .examples, .quiz-question {
+            margin-bottom: 20px;
+        }
+        .examples ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .examples li {
+            background-color: #e9e9e9;
+            margin-bottom: 5px;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: calc(100% - 22px); /* padding and border */
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #resultMessage {
+            margin-top: 15px;
+            font-weight: bold;
+            font-size: 1.2em;
+            color: green;
+        }
+        .code {
+            font-family: monospace;
+            background-color: #222;
+            color: #0f0;
+            padding: 10px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>삼진법 퀴즈</h1>
+
+        <div class="rules">
+            <h2>규칙</h2>
+            <p>이 퀴즈에서는 다음 규칙을 따르는 삼진법을 사용합니다:</p>
+            <ul>
+                <li><code>a</code> = 0</li>
+                <li><code>b</code> = 1</li>
+                <li><code>c</code> = 2</li>
+            </ul>
+            <p><strong>참고:</strong> 제시하신 예시 중 <code>b+c=ca</code>는 표준 삼진법(1+2=3_10 = 10_3 -> 'ba')과 다릅니다. 여기서는 표준 삼진법을 따르며, 따라서 <code>b+c = ba</code>로 간주합니다.</p>
+        </div>
+
+        <div class="examples">
+            <h2>덧셈 예시</h2>
+            <ul>
+                <li>a + a = a  (0 + 0 = 0)</li>
+                <li>a + b = b  (0 + 1 = 1)</li>
+                <li>a + c = c  (0 + 2 = 2)</li>
+                <li>b + b = c  (1 + 1 = 2)</li>
+                <li>b + c = ba (1 + 2 = 3 → 10<sub>3</sub>)</li>
+                <li>c + c = bb (2 + 2 = 4 → 11<sub>3</sub>)</li>
+                <li>ba + b = bb (10<sub>3</sub> + 1<sub>3</sub> = 3 + 1 = 4 → 11<sub>3</sub>)</li>
+                <li>ba + c = bc (10<sub>3</sub> + 2<sub>3</sub> = 3 + 2 = 5 → 12<sub>3</sub>)</li>
+                <li>bc + b = ca (12<sub>3</sub> + 1<sub>3</sub> = 5 + 1 = 6 → 20<sub>3</sub>)</li>
+                <li>bb + cc = bba (11<sub>3</sub> + 22<sub>3</sub> = 4 + 8 = 12 → 110<sub>3</sub>)</li>
+            </ul>
+        </div>
+
+        <div class="quiz-question">
+            <h2>문제</h2>
+            <p>다음 덧셈을 계산하세요:</p>
+            <p><code>bbbb + cccc = ?</code></p>
+            <label for="answerInput">답:</label>
+            <input type="text" id="answerInput" placeholder="예: ba">
+            <button onclick="checkAnswer()">제출</button>
+        </div>
+
+        <div id="resultMessage"></div>
+    </div>
+
+    <script>
+        const ternaryMap = { 'a': 0, 'b': 1, 'c': 2 };
+        const digitMap = ['a', 'b', 'c'];
+
+        function fromTernary(ternaryStr) {
+            let decimalValue = 0;
+            let power = 0;
+            for (let i = ternaryStr.length - 1; i >= 0; i--) {
+                const char = ternaryStr[i];
+                if (ternaryMap[char] === undefined) {
+                    throw new Error("Invalid ternary character: " + char);
+                }
+                decimalValue += ternaryMap[char] * Math.pow(3, power);
+                power++;
+            }
+            return decimalValue;
+        }
+
+        function toTernary(decimalValue) {
+            if (decimalValue === 0) {
+                return 'a';
+            }
+            let ternaryStr = '';
+            while (decimalValue > 0) {
+                const remainder = decimalValue % 3;
+                ternaryStr = digitMap[remainder] + ternaryStr;
+                decimalValue = Math.floor(decimalValue / 3);
+            }
+            return ternaryStr;
+        }
+
+        // 문제: bbbb + cccc
+        const num1_ternary = "bbbb"; // 1111_3
+        const num2_ternary = "cccc"; // 2222_3
+
+        const num1_decimal = fromTernary(num1_ternary); // 1*27 + 1*9 + 1*3 + 1*1 = 40
+        const num2_decimal = fromTernary(num2_ternary); // 2*27 + 2*9 + 2*3 + 2*1 = 54 + 18 + 6 + 2 = 80
+        
+        const sum_decimal = num1_decimal + num2_decimal; // 40 + 80 = 120
+        const correctAnswer = toTernary(sum_decimal); // 120_10 -> 11110_3 -> "bbbba"
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById('answerInput').value.trim().toLowerCase();
+            const resultDiv = document.getElementById('resultMessage');
+
+            if (userAnswer === correctAnswer) {
+                resultDiv.innerHTML = '정답입니다! <br><span class="code">CODE:triangle</span>';
+                resultDiv.style.color = 'green';
+            } else {
+                resultDiv.textContent = '오답입니다. 다시 시도해보세요.';
+                resultDiv.style.color = 'red';
+            }
+        }
+    </script>
+</body>
+</html>
