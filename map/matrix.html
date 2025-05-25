@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Images</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, auto);
+            grid-template-rows: repeat(2, auto);
+            gap: 0px; /* Gap between images */
+            border: 0px solid #ffffff;
+            padding: 0px; /* Remove padding to eliminate border spacing */
+            background-color: #fff;
+        }
+        .grid-container img {
+            width: 200px; /* Adjust as needed */
+            height: 200px; /* Adjust as needed */
+            object-fit: cover; /* To maintain aspect ratio */
+            border: 0px solid #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-container">
+        <img src="matrix1.png" alt="Matrix Image 2">
+        <img src="matrix4.png" alt="Matrix Image 3">
+        <img src="matrix2.png" alt="Matrix Image 1">
+        <img src="matrix3.png" alt="Matrix Image 4">
+    </div>
+</body>
+</html>
