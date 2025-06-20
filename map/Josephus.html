@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>요세푸스 문제 시뮬레이션</title>
+    <style>
+        /* 전역 스타일 및 폰트 설정 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column; /* 세로 정렬을 위해 변경 */
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Noto Sans KR', Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            padding: 40px 20px; /* 위아래 여백 추가 */
+        }
+
+        /* 메인 컨테이너 (카드 UI) */
+        .container {
+            width: 90%;
+            max-width: 700px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px; /* 설명과의 간격 */
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: #2c3e50;
+        }
+        
+        /* 컨트롤 패널 */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 15px 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .controls label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .controls input[type="number"] {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 16px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        
+        .controls input[type="number"]:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        /* 속도 슬라이더 스타일 */
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 120px;
+            height: 8px;
+            background: #ddd;
+            border-radius: 5px;
+            outline: none;
+            cursor: pointer;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #3498db;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            background: #3498db;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        #speedDisplay {
+            font-size: 14px;
+            font-weight: 500;
+            color: #3498db;
+            min-width: 60px;
+        }
+        
+        /* 버튼 그룹 */
+        .button-group {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: 500;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        #startBtn {
+            background-color: #3498db;
+            color: white;
+        }
+
+        #startBtn:hover {
+            background-color: #2980b9;
+        }
+
+        #resetBtn {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+        
+        #resetBtn:hover {
+            background-color: #bdbdbd;
+        }
+
+        /* 캔버스 */
+        canvas {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 50%;
+            max-width: 100%; /* 모바일 반응형 대응 */
+            height: auto;
+        }
+        
+        /* 설명 섹션 스타일 */
+        .explanation-container {
+            width: 90%;
+            max-width: 700px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: left;
+        }
+        
+        .explanation-container h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eaecee;
+        }
+        
+        .explanation-container p {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .explanation-container code {
+            background-color: #f0f2f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.9em;
+        }
+        
+        .explanation-container sup {
+            font-size: 0.8em;
+            vertical-align: super;
+            color: #3498db;
+        }
+
+        .footnotes {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .footnotes h3 {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        
+        .footnotes ol {
+            padding-left: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .footnotes li {
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>요세푸스 문제 시뮬레이션</h1>
+        <div class="controls">
+            <div class="control-group">
+                <label for="nInput">총 인원 (N)</label>
+                <input type="number" id="nInput" value="41" min="1" max="100" />
+            </div>
+            <div class="control-group">
+                <label for="kInput">제거 순서 (K)</label>
+                <input type="number" id="kInput" value="3" min="1" />
+            </div>
+            <div class="control-group">
+                <label for="speedInput">애니메이션 속도</label>
+                <div class="speed-control">
+                   <input type="range" id="speedInput" min="50" max="2000" value="500" step="50" />
+                   <span id="speedDisplay">500 ms</span>
+                </div>
+            </div>
+        </div>
+        <div class="button-group">
+            <button id="startBtn">시작</button>
+            <button id="resetBtn">초기화</button>
+        </div>
+        <canvas id="jCanvas" width="600" height="600"></canvas>
+    </div>
+
+    <div class="explanation-container">
+        <h2>요세푸스 문제의 유래</h2>
+        <p>
+            유대인 역사가 플라비우스 요세푸스가 겪은 경험을 바탕으로 만들어진 문제이다.
+        </p>
+        <p>
+            당시 예루살렘에서 살았던 요세푸스는 유대-로마 전쟁 때 유대군 장교로 참전했다가 동료 병사들, 자신을 포함해 총 41명과 함께 요타파타<sup>[1]</sup>에서 로마군에게 포위되었습니다. 동료들은 항복 대신 집단 자결을 결의했지만, 직접 목숨을 끊는 대신 서로를 제거하는 방식을 고안했습니다. 요세푸스의 기록에 따르면, 그들은 세 명마다 한 명을 죽이는 방식으로 진행했습니다.<sup>[2]</sup> 그러나 삶의 의지가 있었던 요세푸스는 수학적 계산을 통해 마지막까지 살아남을 수 있는 자리를 찾아냈고, 결국 로마에 항복하여 목숨을 건졌습니다.
+        </p>
+    
+        <h2>문제 정의</h2>
+        <p>
+            요세푸스 문제는 주어진 두 자연수 <code>n</code>과 <code>k</code>를 통해 정의됩니다. 1부터 <code>n</code>까지의 사람(또는 숫자)을 원형으로 배치한 후, 특정 지점에서 시작하여 <code>k-1</code>명을 건너뛰고 <code>k</code>번째 사람을 제거하는 과정을 반복합니다. 이 과정을 단 한 명이 남을 때까지 계속했을 때, 마지막으로 살아남는 사람이 누구인지 찾는 것이 이 문제입니다.
+        </p>
+        <p>
+            예를 들어 <code>n=7</code>, <code>k=3</code>인 경우를 살펴보겠습니다. 사람들은 <code>3</code>, <code>6</code>, <code>2</code>, <code>7</code>, <code>5</code>, <code>1</code>의 순서로 제거되며, 최종적으로 <code>4</code>번이 살아남게 됩니다. 요세푸스가 겪었던 원본 문제는 <code>n=41</code>, <code>k=3</code>인 경우로 알려져 있습니다.
+        </p>
+
+        <div class="footnotes">
+            <h3>주석</h3>
+            <ol>
+                <li>요타파타(Yotapata): 현재 이스라엘 북부에 위치한 요드파트(Yodfat) 지역입니다.</li>
+                <li>'2명 살리고 한 명 죽이는 식'은 매 3번째 사람을 제거하는 것(k=3)과 동일합니다. 일부 기록에서는 k=2(한 명 건너 한 명)로 해석하기도 합니다.</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('jCanvas');
+        const ctx = canvas.getContext('2d');
+        const nInput = document.getElementById('nInput');
+        const kInput = document.getElementById('kInput');
+        const speedInput = document.getElementById('speedInput');
+        const speedDisplay = document.getElementById('speedDisplay');
+        const startBtn = document.getElementById('startBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        let N, k, speed, people, currentIndex, intervalId;
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = 250;
+        let isRunning = false;
+        
+        function init() {
+            N = parseInt(nInput.value) || 0;
+            k = parseInt(kInput.value) || 1;
+            speed = parseInt(speedInput.value);
+
+            // 입력값 제한
+            if (N > 100) {
+                N = 100;
+                nInput.value = 100;
+            }
+            if (N < 1) {
+                N = 1;
+                nInput.value = 1;
+            }
+
+            people = Array.from({ length: N }, () => ({ alive: true, highlight: false }));
+            currentIndex = -1;
+            draw();
+            startBtn.disabled = false;
+            startBtn.textContent = '시작';
+            nInput.disabled = false;
+            kInput.disabled = false;
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < N; i++) {
+                const angle = (2 * Math.PI * i) / N - Math.PI / 2;
+                const x = centerX + radius * Math.cos(angle);
+                const y = centerY + radius * Math.sin(angle);
+                
+                ctx.beginPath();
+                ctx.arc(x, y, 15, 0, 2 * Math.PI);
+
+                // 상태에 따른 스타일링
+                if (people[i].alive) {
+                    ctx.fillStyle = '#eaf5ff'; // 생존자 배경색
+                    ctx.strokeStyle = people[i].highlight ? '#3498db' : '#aed6f1'; // 하이라이트/기본 테두리
+                } else {
+                    ctx.fillStyle = '#fadbd8'; // 제거자 배경색
+                    ctx.strokeStyle = '#e74c3c'; // 제거자 테두리
+                }
+                
+                ctx.lineWidth = 2.5;
+                ctx.fill();
+                ctx.stroke();
+
+                // 텍스트 스타일
+                ctx.fillStyle = people[i].alive ? '#2c3e50' : '#a93226';
+                ctx.font = 'bold 14px "Noto Sans KR"';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(i + 1, x, y);
+            }
+        }
+
+        function step() {
+            const alivePeople = people.filter(p => p.alive);
+            if (alivePeople.length <= 1) {
+                stopSimulation();
+                // 최후의 1인 강조
+                const winner = people.findIndex(p => p.alive);
+                if (winner !== -1) {
+                    people[winner].highlight = true;
+                    draw();
+                }
+                return;
+            }
+
+            // 이전에 강조된 부분 해제
+            people.forEach(p => p.highlight = false);
+
+            let count = 0;
+            while (count < k) {
+                currentIndex = (currentIndex + 1) % N;
+                if (people[currentIndex].alive) {
+                    count++;
+                }
+            }
+
+            // 제거될 사람 강조 후 제거
+            people[currentIndex].highlight = true;
+            draw();
+            
+            setTimeout(() => {
+                if (!isRunning) return; // 중간에 리셋되면 실행 중지
+                people[currentIndex].alive = false;
+                people[currentIndex].highlight = false;
+                draw();
+            }, speed / 2);
+        }
+
+        function startSimulation() {
+            if (isRunning) return;
+            
+            k = parseInt(kInput.value);
+            if(k < 1) {
+                k = 1;
+                kInput.value = 1;
+            }
+
+            init(); // n 값이 변경되었을 수 있으므로 재초기화
+            if (N < 1) return;
+
+            isRunning = true;
+            startBtn.disabled = true;
+            startBtn.textContent = '진행 중...';
+            nInput.disabled = true;
+            kInput.disabled = true;
+
+            intervalId = setInterval(step, speed);
+        }
+
+        function stopSimulation() {
+            clearInterval(intervalId);
+            intervalId = null;
+            isRunning = false;
+            startBtn.disabled = false;
+            startBtn.textContent = '시작';
+            nInput.disabled = false;
+            kInput.disabled = false;
+        }
+
+        startBtn.addEventListener('click', startSimulation);
+
+        resetBtn.addEventListener('click', () => {
+            stopSimulation();
+            init();
+        });
+
+        speedInput.addEventListener('input', (e) => {
+            speed = parseInt(e.target.value);
+            speedDisplay.textContent = speed + ' ms';
+            if (isRunning) {
+                clearInterval(intervalId);
+                intervalId = setInterval(step, speed);
+            }
+        });
+
+        nInput.addEventListener('change', init);
+        kInput.addEventListener('change', init);
+        
+        // 초기화 및 그리기
+        init();
+    </script>
+</body>
+</html>
