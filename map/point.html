@@ -1,148 +1,92 @@
-
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Circle Text Interaction (Responsive)</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Circle Interaction Quiz</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.js"></script>
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-    }
+    /* Ensure the canvas itself has a black border */
     canvas {
-      touch-action: none; /* 모바일 터치 시 스크롤 방지 */
+      border: 2px solid black;
       display: block;
+      margin: 0 auto;
+    }
+    /* Center the controls under the canvas */
+    #controls {
+      text-align: center;
+      margin-top: 10px;
+      font-family: sans-serif;
+    }
+    #controls input {
+      padding: 5px;
+      font-size: 1rem;
+      width: 100px;
+      text-transform: uppercase;
+    }
+    #controls button {
+      padding: 5px 10px;
+      font-size: 1rem;
+      margin-left: 5px;
     }
   </style>
 </head>
 <body>
-<script>
-  let font;
-  let circles = [];
+  <script>
+    let centerX, centerY, radius;
 
-  // 전역 변수로 뒀지만, setup/windowResized 시 다시 계산됩니다
-  let radius, repulsionStrength, springStrength, friction, influenceRadius;
-
-  function preload() {
-    font = loadFont(
-      'https://cdnjs.cloudflare.com/ajax/libs/topcoat/0.8.0/font/SourceCodePro-Regular.otf'
-    );
-  }
-
-  function setup() {
-    pixelDensity(1);             // 모바일 과잉 렌더링 방지
-    let canvas = createCanvas(windowWidth, windowHeight);
-    canvas.style('display', 'block');
-    if (font) textFont(font);
-
-    // 초기 파라미터 계산 및 점 생성
-    regenerateCircles();
-  }
-
-  function windowResized() {
-    resizeCanvas(windowWidth, windowHeight);
-    regenerateCircles();
-  }
-
-  function regenerateCircles() {
-    circles = [];
-
-    // 반응형 파라미터
-    radius             = constrain(width * 0.01, 3, 15);
-    repulsionStrength  = 1.2;
-    springStrength     = 0.08;
-    friction           = 0.85;
-    influenceRadius    = constrain(width * 0.03, 30, 100);
-
-    if (!font) {
-      // 대체: 화면 중심 원형 배치
-      for (let i = 0; i < 100; i++) {
-        let a = TWO_PI * i / 100;
-        let x = width/2 + cos(a) * (width*0.3);
-        let y = height/2 + sin(a) * (width*0.3);
-        circles.push(new Circle(x, y));
-      }
-      return;
+    function setup() {
+      // Create a square canvas (400x400)
+      createCanvas(400, 400);
+      // Calculate center and radius for the invisible circle
+      centerX = width / 2;
+      centerY = height / 2;
+      radius = width / 2;
     }
 
-    // 텍스트 크기 및 위치 계산
-    let txtSize = width * 0.2;        // 화면 폭의 20%
-    textSize(txtSize);
-    let bounds = font.textBounds('CIRCLE', 0, 0, txtSize);
+    function draw() {
+      let isInside = false;
 
-    // 중앙 정렬 (x0, y0)
-    let x0 = width*0.5 - bounds.w*0.5 - bounds.x;
-    let y0 = height*0.5 - bounds.h*0.5 - bounds.y;
+      // Check mouse
+      if (mouseIsPressed) {
+        if (dist(mouseX, mouseY, centerX, centerY) < radius) {
+          isInside = true;
+        }
+      }
 
-    // 해상도 조절: 화면 작으면 점 개수 줄임
-    let sampleF = width < 500 ? 0.03 : 0.04;
+      // Check touches (mobile)
+      for (let t of touches) {
+        if (dist(t.x, t.y, centerX, centerY) < radius) {
+          isInside = true;
+          break;
+        }
+      }
 
-    // 글자 외곽 점 추출
-    let pts = font.textToPoints('CIRCLE', x0, y0, txtSize, {
-      sampleFactor: sampleF,
-      simplifyThreshold: 0
+      // Set background color based on interaction
+      if (isInside) {
+        background('green');
+      } else {
+        background('yellow');
+      }
+    }
+  </script>
+
+  <!-- Controls for the quiz: hint, input box, submit button -->
+  <div id="controls">
+    <div>힌트: <strong>CXXXXX</strong></div>
+    <input type="text" id="answer" placeholder="CXXXXX" />
+    <button id="submit">제출</button>
+  </div>
+
+  <script>
+    document.getElementById('submit').addEventListener('click', () => {
+      const ans = document.getElementById('answer').value.trim().toUpperCase();
+      if (ans === 'CIRCLE') {
+        alert('정답입니다!');
+      } else {
+        alert('틀렸습니다. 다시 시도하세요.');
+      }
     });
-
-    for (let pt of pts) {
-      circles.push(new Circle(pt.x, pt.y));
-    }
-    console.log(`Generated ${circles.length} points`);
-  }
-
-  function draw() {
-    background(255);
-    // 모바일 터치 시 첫 번째 터치점 사용
-    let mx = touches.length ? touches[0].x : mouseX;
-    let my = touches.length ? touches[0].y : mouseY;
-
-    for (let c of circles) {
-      c.update(mx, my);
-      c.display();
-    }
-  }
-
-  class Circle {
-    constructor(x, y) {
-      this.original = createVector(x, y);
-      this.pos      = createVector(x, y);
-      this.vel      = createVector(0, 0);
-    }
-
-    update(mx, my) {
-      let mouse = createVector(mx, my);
-      let dir   = p5.Vector.sub(this.pos, mouse);
-      let d     = dir.mag();
-
-      // 마우스/터치에 대한 반발력
-      if (d < influenceRadius && d > 0.1) {
-        let strength = pow((influenceRadius - d) / influenceRadius, 0.8) * repulsionStrength;
-        dir.normalize().mult(strength);
-        this.vel.add(dir);
-      }
-
-      // 원래 위치로 되돌리는 스프링
-      let toOrig = p5.Vector.sub(this.original, this.pos).mult(springStrength);
-      this.vel.add(toOrig);
-
-      // 마찰 & 위치 통합
-      this.vel.mult(friction);
-      this.pos.add(this.vel);
-    }
-
-    display() {
-      let disp = p5.Vector.dist(this.pos, this.original);
-      let t    = constrain(pow(disp / influenceRadius, 1), 0, 1);
-
-      // 이동량에 따라 색상 보간
-      fill(lerpColor(color(255), color(0), t));
-      noStroke();
-      ellipse(this.pos.x, this.pos.y, radius*2);
-    }
-  }
-</script>
+  </script>
 </body>
 </html>
-
