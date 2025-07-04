@@ -97,6 +97,46 @@
                 transform: scale(0.5);
             }
         }
+
+        /* 하단 이미지 컨테이너 */
+        .hint-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* 하단 이미지 */
+        .hint-image {
+            width: 300px;
+            max-width: 90%; /* 화면 너비에 맞게 조절 */
+            height: auto;
+        }
+
+        /* 모바일 반응형 스타일 */
+        @media (max-width: 600px) {
+            .input-boxes {
+                flex-wrap: wrap; /* 작은 화면에서 여러 줄로 자동 정렬 */
+                justify-content: center;
+                margin-bottom: 20px;
+            }
+
+            .box {
+                width: 50px;
+                height: 50px;
+                margin: 5px;
+            }
+
+            #display-area {
+                width: 90vw; /* 화면 너비의 90% */
+                height: 150vw; /* 3:5 비율 유지 */
+                max-width: 300px;
+                max-height: 500px;
+            }
+
+            .circle {
+                width: 60px;
+                height: 60px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -184,8 +224,8 @@
             });
         });
     </script>
-    <div style="text-align: center; margin-top: 20px;">
-        <img src="5315.png" alt="Puzzle Hint" style="width: 300px;">
+    <div class="hint-container">
+        <img src="5315.png" alt="Puzzle Hint" class="hint-image">
     </div>
 </body>
 </html>
