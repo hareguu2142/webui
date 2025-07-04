@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>수학 퍼즐 대회</title>
+    
+    <!-- CSS 스타일 -->
+    <style>
+        /* 전체 페이지 스타일 */
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #2c3e50; /* 어두운 배경색 */
+        }
+
+        /* 퍼즐 전체를 감싸는 컨테이너 */
+        .puzzle-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 상단 6개 네모의 컨테이너 */
+        .input-boxes {
+            display: flex;
+            margin-bottom: 30px; /* 큰 네모와의 간격 */
+        }
+
+        /* 상단 6개 네모 각각의 스타일 */
+        .box {
+            width: 60px;
+            height: 60px;
+            border: 3px solid #bdc3c7; /* 테두리 색 */
+            background-color: #34495e; /* 네모 내부 색 */
+            margin: 0 10px; /* 네모 사이의 간격 */
+            cursor: pointer;
+            transition: border-color 0.3s ease, transform 0.2s ease;
+        }
+
+        /* 네모에 마우스를 올렸을 때 효과 */
+        .box:hover {
+            border-color: #ecf0f1; /* 밝은 테두리 색 */
+            transform: scale(1.05);
+        }
+
+        /* 애니메이션이 표시될 큰 네모 */
+        #display-area {
+            width: 300px;
+            height: 500px; /* 3x5 비율에 맞게 조정 */
+            border: 3px solid #bdc3c7;
+            background-color: #34495e;
+            position: relative; /* 원을 내부에 위치시키기 위한 기준점 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* 원이 밖으로 나가지 않도록 함 */
+        }
+
+        /* 동적으로 생성될 원의 기본 스타일 */
+        .circle {
+            width: 80px;
+            height: 80px;
+            position: absolute; /* display-area 내부에 자유롭게 위치 */
+            border-radius: 50%;
+            box-sizing: border-box; /* 테두리를 크기 안에 포함 */
+            animation: fadeInOut 0.5s forwards;
+        }
+
+        /* 속이 꽉 찬 원 */
+        .circle.filled {
+            background-color: #ffffff;
+        }
+
+        /* 속이 빈 원 */
+        .circle.empty {
+            background-color: transparent;
+            border: 8px solid #ffffff;
+        }
+
+        /* 원이 나타났다가 사라지는 애니메이션 */
+        @keyframes fadeInOut {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="puzzle-container">
+        <!-- 정답(CIRCLE)의 각 알파벳을 나타내는 6개의 네모 -->
+        <div class="input-boxes">
+            <div class="box" data-letter="C1"></div>
+            <div class="box" data-letter="I"></div>
+            <div class="box" data-letter="R"></div>
+            <div class="box" data-letter="C2"></div>
+            <div class="box" data-letter="L"></div>
+            <div class="box" data-letter="E"></div>
+        </div>
+
+        <!-- 애니메이션이 표시될 큰 네모 -->
+        <div id="display-area"></div>
+    </div>
+
+    <!-- JavaScript 로직 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const boxes = document.querySelectorAll('.box');
+            const displayArea = document.getElementById('display-area');
+
+            // 각 알파벳을 3x5 그리드의 1(채운 원)과 0(빈 원)으로 표현
+            const patterns = {
+                C: [1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1],
+                I: [1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1],
+                R: [1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1],
+                L: [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1],
+                E: [1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1]
+            };
+
+            let currentAnimation = null; // 현재 실행 중인 애니메이션을 제어하기 위한 변수
+
+            // 애니메이션을 재생하는 함수
+            const playAnimation = (pattern) => {
+                // 이전 애니메이션이 실행 중이면 중단
+                if (currentAnimation) {
+                    clearTimeout(currentAnimation);
+                }
+
+                // 디스플레이 영역을 비움
+                displayArea.innerHTML = '';
+
+                let delay = 0;
+                const animationDuration = 500; // CSS의 animation 시간과 일치
+
+                pattern.forEach((type, index) => {
+                    currentAnimation = setTimeout(() => {
+                        // 이전 원을 지우고 새 원을 만듦
+                        displayArea.innerHTML = '';
+
+                        const circle = document.createElement('div');
+                        circle.classList.add('circle');
+                        circle.classList.add(type === 1 ? 'filled' : 'empty');
+                        
+                        displayArea.appendChild(circle);
+
+                        // 마지막 원이 표시된 후 디스플레이 영역을 비움
+                        if (index === pattern.length - 1) {
+                            setTimeout(() => {
+                                displayArea.innerHTML = '';
+                            }, animationDuration);
+                        }
+                    }, delay);
+
+                    delay += animationDuration;
+                });
+            };
+
+            // 각 네모에 클릭 이벤트 리스너 추가
+            boxes.forEach(box => {
+                box.addEventListener('click', () => {
+                    const letter = box.dataset.letter;
+                    
+                    // C1, C2 모두 'C' 패턴을 사용하도록 처리
+                    const patternKey = letter.startsWith('C') ? 'C' : letter;
+                    
+                    if (patterns[patternKey]) {
+                        playAnimation(patterns[patternKey]);
+                    }
+                });
+            });
+        });
+    </script>
+    <div style="text-align: center; margin-top: 20px;">
+        <img src="5315.png" alt="Puzzle Hint" style="width: 300px;">
+    </div>
+</body>
+</html>
