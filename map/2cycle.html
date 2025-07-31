@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Swap Elements Demo</title>
+    <style>
+        /* Container for the slots */
+        .slot-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            max-width: 220px;
+            margin-bottom: 20px;
+        }
+        /* Individual slot styling */
+        .slot {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #333;
+            font-size: 18px;
+            font-family: Arial, sans-serif;
+        }
+        /* Container for input controls */
+        #controls {
+            margin-top: 10px;
+        }
+        #controls input[type="number"] {
+            width: 60px;
+            padding: 4px;
+            font-size: 16px;
+        }
+        #controls button {
+            padding: 6px 12px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h2>Swap the first element with the nth element</h2>
+    <!-- Display the 20 slots -->
+    <div class="slot-container" id="slots"></div>
+
+    <!-- Input and button controls -->
+    <div id="controls">
+        <label for="positionInput">Enter n (1–20): </label>
+        <input type="number" id="positionInput" min="1" max="20" />
+        <button onclick="swapElements()">Swap</button>
+    </div>
+
+    <script>
+        // Array representing the 20 elements; will contain ten 'x' followed by ten 'y'
+        let arr = [];
+
+        /**
+         * Initialize the array and render it to the page.
+         */
+        function initialize() {
+            arr = [];
+            // Add 10 'x'
+            for (let i = 0; i < 10; i++) {
+                arr.push('x');
+            }
+            // Add 10 'y'
+            for (let j = 0; j < 10; j++) {
+                arr.push('y');
+            }
+            updateDisplay();
+        }
+
+        /**
+         * Render the current state of the array to the DOM.
+         */
+        function updateDisplay() {
+            const container = document.getElementById('slots');
+            // Clear any existing content
+            container.innerHTML = '';
+            // Create a div for each element in the array
+            arr.forEach((value, index) => {
+                const slotDiv = document.createElement('div');
+                slotDiv.className = 'slot';
+                slotDiv.textContent = value;
+                // Optionally store index as data attribute
+                slotDiv.setAttribute('data-index', index + 1);
+                container.appendChild(slotDiv);
+            });
+        }
+
+        /**
+         * Swap the first element with the element in the nth position.
+         * After swapping, check if the goal state has been reached.
+         */
+        function swapElements() {
+            const input = document.getElementById('positionInput');
+            const nValue = parseInt(input.value, 10);
+            // Validate input
+            if (isNaN(nValue) || nValue < 1 || nValue > 20) {
+                alert('Please enter a valid position between 1 and 20.');
+                return;
+            }
+            // Adjust for zero-based indexing
+            const targetIndex = nValue - 1;
+            // Perform the swap between index 0 and targetIndex
+            const temp = arr[0];
+            arr[0] = arr[targetIndex];
+            arr[targetIndex] = temp;
+            // Update the display after swapping
+            updateDisplay();
+            // Check if the array is now ten 'y' followed by ten 'x'
+            const goal = 'yyyyyyyyyyxxxxxxxxxx';
+            const currentString = arr.join('');
+            if (currentString === goal) {
+                alert('Success');
+            }
+        }
+
+        // Initialize the page on load
+            initialize();
+    </script>
+</body>
+</html>
