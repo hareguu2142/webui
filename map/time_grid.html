@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hex Time Grid Clock</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+  }
+  #clockContainer {
+    display: grid;
+    grid-template-columns: repeat(4, 60px);
+    grid-template-rows: repeat(4, 60px);
+    gap: 4px;
+    margin-bottom: 20px;
+  }
+  .cell {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    box-shadow: inset 0 0 4px rgba(0,0,0,0.2);
+  }
+  .dot {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    box-sizing: border-box;
+  }
+  #timeDisplay {
+    font-size: 32px;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+  <div id="clockContainer"></div>
+  <div id="timeDisplay"></div>
+  
+  <script>
+    // Number of dots (base 16 representation requires 5 digits for 86400 seconds)
+    const dotCount = 5;
+    // Offset positions within a cell for each dot to avoid exact overlap
+    const offsets = [
+      {x: 6, y: 6},
+      {x: 40, y: 6},
+      {x: 6, y: 40},
+      {x: 40, y: 40},
+      {x: 23, y: 23}
+    ];
+    // Colors for each dot (consistent across cells)
+    const colors = ['#e74c3c', '#2ecc71', '#3498db', '#f1c40f', '#9b59b6'];
+    // Create 4x4 grid and dot elements
+    const clockContainer = document.getElementById('clockContainer');
+    const cells = [];
+    for (let i = 0; i < 16; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      clockContainer.appendChild(cell);
+      cells.push(cell);
+    }
+    // Create dot elements (just once and move them around)
+    const dots = [];
+    for (let i = 0; i < dotCount; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'dot';
+      dot.style.left = offsets[i].x + 'px';
+      dot.style.top = offsets[i].y + 'px';
+      dot.style.backgroundColor = colors[i];
+      dots.push(dot);
+    }
+    // Append all dots to the first cell initially (they will be repositioned)
+    dots.forEach(dot => {
+      cells[0].appendChild(dot);
+    });
+    // Display the time in HH:MM:SS format
+    const timeDisplay = document.getElementById('timeDisplay');
+    function formatTime(date) {
+      const pad = n => n.toString().padStart(2, '0');
+      return `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+    }
+    function updateClock() {
+      const now = new Date();
+      // Ensure timezone is Asia/Seoul
+      const seoulNow = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Seoul' }));
+      // display time
+      timeDisplay.textContent = formatTime(seoulNow);
+      // Compute seconds since midnight
+      const hours = seoulNow.getHours();
+      const minutes = seoulNow.getMinutes();
+      const seconds = seoulNow.getSeconds();
+      const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+      // Convert to base 16 with 5 digits (least significant digit first)
+      let remaining = totalSeconds;
+      const digits = new Array(dotCount).fill(0);
+      for (let i = 0; i < dotCount; i++) {
+        digits[i] = remaining % 16;
+        remaining = Math.floor(remaining / 16);
+      }
+      // Position dots according to digits
+      for (let i = 0; i < dotCount; i++) {
+        const cellIndex = digits[i];
+        // If dot is not already in target cell, move it
+        if (dots[i].parentElement !== cells[cellIndex]) {
+          dots[i].parentElement.removeChild(dots[i]);
+          cells[cellIndex].appendChild(dots[i]);
+        }
+      }
+    }
+    // Update once at start
+    updateClock();
+    // Update every second
+    setInterval(updateClock, 1000);
+  </script>
+</body>
+</html>
