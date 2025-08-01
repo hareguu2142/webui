@@ -1,181 +1,204 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>2-사이클 퍼즐</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css" integrity="sha384-Xi8rHCmBmhbuyyhbI88391ZKP2dmfnOl4rT9ZfN43xCN9DsLeFB2DIxI28mX61GO" crossorigin="anonymous">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js" integrity="sha384-X/XCfMm41eResult9y+iSzzIyPyVoKFG_d2dYLovsOFhrUPQEUbtiS5K1maHeEWCs" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7eEbygahtGkdM2ALAYp8gfgt1" crossorigin="anonymous"
-        onload="renderMathInElement(document.body);"></script>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            background-color: #f0f2f5;
-            color: #333;
-        }
-        .container {
-            background: #fff;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            max-width: 800px;
-        }
-        h2 {
-            color: #1a73e8;
-            margin-bottom: 1.5rem;
-        }
-        .slot-container {
-            display: flex;
-            gap: 5px;
-            margin-bottom: 20px;
-            justify-content: center;
-        }
-        .slot {
-            width: 35px;
-            height: 35px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid #1a73e8;
-            border-radius: 5px;
-            font-size: 20px;
-            font-weight: bold;
-            color: #fff;
-            transition: background-color 0.3s, transform 0.3s;
-        }
-        .slot[data-value="x"] {
-            background-color: #e84118;
-        }
-        .slot[data-value="y"] {
-            background-color: #4cd137;
-        }
-        #controls {
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        #controls input[type="number"] {
-            width: 70px;
-            padding: 8px;
-            font-size: 16px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            text-align: center;
-        }
-        #controls button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #1a73e8;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-        #controls button:hover {
-            background-color: #155ab6;
-        }
-        .math-explanation {
-            margin-top: 2rem;
-            text-align: left;
-            padding: 1.5rem;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            background-color: #fafafa;
-        }
-        .math-explanation h3 {
-            text-align: center;
-            color: #1a73e8;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>2-사이클 퍼즐</title>
+  <!-- KaTeX CSS -->
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css">
+  <!-- KaTeX core (defer) -->
+  <script defer
+          src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"></script>
+  <!-- Auto-render 플러그인 (defer + onload) -->
+  <script defer
+          src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js"
+          onload="renderMathInElement(document.body, {
+            delimiters: [
+              {left: '$$', right: '$$', display: true},    /* display math */
+              {left: '$',  right: '$',  display: false},   /* inline math */
+              {left: '\\(', right: '\\)', display: false}, /* inline math */
+              {left: '\\[', right: '\\]', display: true}   /* display math */
+            ],
+            throwOnError: false  /* 문법 에러 시 TeX 원문 그대로 표시 */
+          });">
+  </script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      background-color: #f0f2f5;
+      color: #333;
+    }
+    .container {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 800px;
+    }
+    h2 {
+      color: #1a73e8;
+      margin-bottom: 1.5rem;
+    }
+    .slot-container {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+    .slot {
+      width: 35px;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #1a73e8;
+      border-radius: 5px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #fff;
+      transition: background-color 0.3s, transform 0.3s;
+    }
+    .slot[data-value="x"] {
+      background-color: #e84118;
+    }
+    .slot[data-value="y"] {
+      background-color: #4cd137;
+    }
+    #controls {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    #controls input[type="number"] {
+      width: 70px;
+      padding: 8px;
+      font-size: 16px;
+      border: 2px solid #ddd;
+      border-radius: 5px;
+      text-align: center;
+    }
+    #controls button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #1a73e8;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    #controls button:hover {
+      background-color: #155ab6;
+    }
+    .math-explanation {
+      margin-top: 2rem;
+      text-align: left;
+      padding: 1.5rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      background-color: #fafafa;
+    }
+    .math-explanation h3 {
+      text-align: center;
+      color: #1a73e8;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h2>첫 번째 원소와 n번째 원소 바꾸기</h2>
-        <div class="slot-container" id="slots"></div>
-        <div id="controls">
-            <label for="positionInput">n (1–20) 입력: </label>
-            <input type="number" id="positionInput" min="1" max="20" />
-            <button onclick="swapElements()">바꾸기</button>
-        </div>
-
-        <div class="math-explanation">
-            <h3>수학적 배경: 순열과 2-사이클</h3>
-            <p>
-                이 퍼즐은 순열군의 탐구입니다. 집합의 <strong>순열</strong>은 그 원소들을 특정 순서로 배열하는 것입니다. 이 퍼즐에서는 20개의 원소로 이루어진 집합이 있으며, 초기 상태에서 특정 목표 순열에 도달하고자 합니다.
-            </p>
-            <p>
-                허용된 유일한 연산은 첫 번째 원소와 n번째 원소를 바꾸는 것입니다. 추상대수학에서 이러한 유형의 교환을 <strong>호환</strong> 또는 <strong>2-사이클</strong>이라고 합니다. 위치 \(i\)와 \(j\)의 원소를 바꾸는 2-사이클은 \((i, j)\)로 표기됩니다. 우리의 경우, 모든 연산은 \((1, n)\) 형태이며, 여기서 \(n\)은 당신이 선택하는 위치입니다.
-            </p>
-            <p>
-                군론의 기본 정리에 따르면, 모든 순열은 호환의 곱(합성)으로 표현될 수 있습니다. 목표 상태는 모든 'y'가 먼저 오고, 그 뒤에 모든 'x'가 오는 것입니다. 초기 상태를 \(S_0\), 목표 상태를 \(S_f\)라고 할 때, 우리는 다음을 만족하는 \((1, n_i)\) 형태의 호환 수열 \(T_k, T_{k-1}, \dots, T_1\)을 찾고 있습니다:
-                $$ S_f = T_k \circ T_{k-1} \circ \dots \circ T_1(S_0) $$
-                문제는 목표를 달성하기 위해 올바른 교환 순서를 찾는 것입니다. \((1, n)\) 형태의 교환만 사용하도록 제한되면 모든 순열에 도달할 수 있는 것은 아닙니다. 이 퍼즐은 제한된 연산 집합이 복잡한 재배열을 달성하기에 얼마나 강력할 수 있는지를 보여줍니다.
-            </p>
-        </div>
+  <div class="container">
+    <h2>첫 번째 원소와 n번째 원소 바꾸기</h2>
+    <div class="slot-container" id="slots"></div>
+    <div id="controls">
+      <label for="positionInput">n (1–20) 입력: </label>
+      <input type="number" id="positionInput" min="1" max="20" />
+      <button onclick="swapElements()">바꾸기</button>
     </div>
 
-    <script>
-        let arr = [];
+    <div class="math-explanation">
+      <h3>수학적 배경: 순열과 2-사이클</h3>
+      <p>
+        이 퍼즐은 순열군의 탐구입니다. 집합의 <strong>순열</strong>은 그 원소들을 특정 순서로 배열하는 것입니다.
+        이 퍼즐에서는 20개의 원소로 이루어진 집합이 있으며, 초기 상태에서 특정 목표 순열에 도달하고자 합니다.
+      </p>
+      <p>
+        허용된 유일한 연산은 첫 번째 원소와 n번째 원소를 바꾸는 것입니다.
+        추상대수학에서 이러한 유형의 교환을 <strong>호환</strong> 또는 <strong>2-사이클</strong>이라고 합니다.
+        위치 \(i\)와 \(j\)의 원소를 바꾸는 2-사이클은 \((i, j)\)로 표기됩니다.
+        우리의 경우, 모든 연산은 \((1, n)\) 형태이며, 여기서 \(n\)은 당신이 선택하는 위치입니다.
+      </p>
+      <p>
+        군론의 기본 정리에 따르면, 모든 순열은 호환의 곱(합성)으로 표현될 수 있습니다.
+        목표 상태는 모든 'y'가 먼저 오고, 그 뒤에 모든 'x'가 오는 것입니다.
+        초기 상태를 \(S_0\), 목표 상태를 \(S_f\)라고 할 때, 우리는 다음을 만족하는
+        \((1, n_i)\) 형태의 호환 수열 \(T_k, \dots, T_1\)을 찾고 있습니다:
+      </p>
+      $$ 
+        S_f = T_k \circ T_{k-1} \circ \dots \circ T_1(S_0)
+      $$
+      <p>
+        문제는 목표를 달성하기 위해 올바른 교환 순서를 찾는 것입니다.
+        \((1, n)\) 형태의 교환만으로도 모든 순열을 생성할 수 있습니다.
+        이 퍼즐은 제한된 연산 집합이 복잡한 재배열을 달성하기에 얼마나 강력할 수 있는지를 보여줍니다.
+      </p>
+    </div>
+  </div>
 
-        function initialize() {
-            arr = [];
-            for (let i = 0; i < 10; i++) arr.push('x');
-            for (let j = 0; j < 10; j++) arr.push('y');
-            updateDisplay();
-        }
+  <script>
+    let arr = [];
 
-        function updateDisplay() {
-            const container = document.getElementById('slots');
-            container.innerHTML = '';
-            arr.forEach((value, index) => {
-                const slotDiv = document.createElement('div');
-                slotDiv.className = 'slot';
-                slotDiv.textContent = value;
-                slotDiv.setAttribute('data-value', value);
-                slotDiv.setAttribute('data-index', index + 1);
-                container.appendChild(slotDiv);
-            });
-        }
+    function initialize() {
+      arr = [];
+      for (let i = 0; i < 10; i++) arr.push('x');
+      for (let j = 0; j < 10; j++) arr.push('y');
+      updateDisplay();
+    }
 
-        function swapElements() {
-            const input = document.getElementById('positionInput');
-            const nValue = parseInt(input.value, 10);
-            if (isNaN(nValue) || nValue < 1 || nValue > 20) {
-                alert('1에서 20 사이의 유효한 위치를 입력하세요.');
-                return;
-            }
-            const targetIndex = nValue - 1;
-            const temp = arr[0];
-            arr[0] = arr[targetIndex];
-            arr[targetIndex] = temp;
-            updateDisplay();
-            checkSuccess();
-        }
+    function updateDisplay() {
+      const container = document.getElementById('slots');
+      container.innerHTML = '';
+      arr.forEach((value, index) => {
+        const slotDiv = document.createElement('div');
+        slotDiv.className = 'slot';
+        slotDiv.textContent = value;
+        slotDiv.setAttribute('data-value', value);
+        slotDiv.setAttribute('data-index', index + 1);
+        container.appendChild(slotDiv);
+      });
+    }
 
-        function checkSuccess() {
-            const goal = 'yyyyyyyyyyxxxxxxxxxx';
-            const currentString = arr.join('');
-            if (currentString === goal) {
-                setTimeout(() => {
-                    alert('성공! 퍼즐을 해결했습니다.');
-                }, 100);
-            }
-        }
+    function swapElements() {
+      const input = document.getElementById('positionInput');
+      const nValue = parseInt(input.value, 10);
+      if (isNaN(nValue) || nValue < 1 || nValue > 20) {
+        alert('1에서 20 사이의 유효한 위치를 입력하세요.');
+        return;
+      }
+      const targetIndex = nValue - 1;
+      [arr[0], arr[targetIndex]] = [arr[targetIndex], arr[0]];
+      updateDisplay();
+      checkSuccess();
+    }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            initialize();
-            renderMathInElement(document.body);
-        });
-    </script>
+    function checkSuccess() {
+      const goal = 'yyyyyyyyyyxxxxxxxxxx';
+      if (arr.join('') === goal) {
+        setTimeout(() => {
+          alert('성공! 퍼즐을 해결했습니다.');
+        }, 100);
+      }
+    }
+
+    // 페이지 로드 시 초기화
+    window.addEventListener('DOMContentLoaded', initialize);
+  </script>
 </body>
 </html>
