@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>RGB Color Match Game</title>
+<style>
+    /* Global styles */
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        /* background color will be set via JavaScript */
+    }
+
+    /* The circular ring whose colour the player controls */
+    #ring {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        border: 10px solid rgba(0, 0, 0, 0.2);
+        background-color: white;
+        margin-bottom: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+    }
+
+    /* Layout for the control panel */
+    #controls {
+        display: flex;
+        gap: 40px;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    /* Container for each slider/dial and its label */
+    .slider-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Styling for the horizontal slider (red) */
+    #sliderR {
+        width: 200px;
+    }
+
+    /* Custom vertical slider container (green). */
+    .vertical-slider {
+        position: relative;
+        width: 20px;
+        height: 200px;
+    }
+
+    .vertical-slider .v-track {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        width: 4px;
+        height: 100%;
+        background: #ccc;
+        transform: translateX(-50%);
+        border-radius: 2px;
+    }
+
+    .vertical-slider .v-knob {
+        position: absolute;
+        left: 50%;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: #007bff;
+        transform: translate(-50%, -50%);
+        top: 100%; /* start at bottom for value 0 */
+        cursor: pointer;
+    }
+
+    /* General style tweaks for all range inputs. */
+    input[type=range] {
+        cursor: pointer;
+    }
+
+    /* Styling for the custom circular dial (blue). */
+    #dial {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        border: 10px solid rgba(0, 0, 0, 0.2);
+        border-radius: 50%;
+        background-color: #f9f9f9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    /* Pointer inside the dial that rotates to indicate the current value */
+    #dial .pointer {
+        position: absolute;
+        width: 80px;
+        height: 4px;
+        background: #333;
+        left: 50%;
+        top: 50%;
+        /* The pointer rotates around its left-centre to emulate a dial arm */
+        transform-origin: 0% 50%;
+        transform: rotate(0deg);
+    }
+
+    /* Success message shown when the colours match */
+    #successMessage {
+        margin-top: 20px;
+        font-size: 24px;
+        color: white;
+        font-weight: bold;
+        display: none;
+        padding: 10px 20px;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 8px;
+    }
+</style>
+</head>
+<body>
+    <!-- The ring the player attempts to match to the page's background colour -->
+    <div id="ring"></div>
+    <!-- Control panel containing the sliders/dial -->
+    <div id="controls">
+        <!-- Horizontal slider for the red component -->
+        <div class="slider-container">
+            <label for="sliderR">Red</label>
+            <input id="sliderR" type="range" min="0" max="255" value="0">
+        </div>
+        <!-- Custom vertical slider for the green component -->
+        <div class="slider-container">
+            <label for="sliderG">Green</label>
+            <div id="sliderG" class="vertical-slider">
+                <div class="v-track"></div>
+                <div class="v-knob"></div>
+            </div>
+        </div>
+        <!-- Circular dial for the blue component -->
+        <div class="slider-container">
+            <label for="dial">Blue</label>
+            <div id="dial">
+                <div class="pointer"></div>
+            </div>
+        </div>
+    </div>
+    <!-- Success message area -->
+    <div id="successMessage">Success!</div>
+
+<script>
+    /*
+     * This script drives the RGB colour matching game.  The page's background
+     * colour is randomly assigned on load.  Users adjust three controls—
+     * a horizontal slider for red, a custom vertical slider for green, and a
+     * custom circular dial for blue—to try and match the ring's colour to
+     * the page's background.  When the colours match exactly the word
+     * "Success!" appears on screen.
+     */
+
+    // Object to hold the randomly chosen target colour for the page.
+    const targetColor = { r: 0, g: 0, b: 0 };
+
+    /**
+     * Generate a random integer between 0 and max (inclusive).
+     * @param {number} max - The maximum value for the random integer.
+     * @returns {number} A random integer from 0 to max.
+     */
+    function randomInt(max) {
+        return Math.floor(Math.random() * (max + 1));
+    }
+
+    /**
+     * Choose a random colour for the page and apply it to the body
+     * element.  The values are stored in the global targetColor object
+     * for later comparison.
+     */
+    function setPageBackground() {
+        targetColor.r = randomInt(255);
+        targetColor.g = randomInt(255);
+        targetColor.b = randomInt(255);
+        document.body.style.backgroundColor = `rgb(${targetColor.r},${targetColor.g},${targetColor.b})`;
+    }
+
+    // Current colour values selected by the player for the ring.
+    const currentColor = { r: 0, g: 0, b: 0 };
+
+    // DOM references for efficiency.
+    const ring = document.getElementById('ring');
+    const sliderR = document.getElementById('sliderR');
+    const vSliderG = document.getElementById('sliderG');
+    const knobG = vSliderG.querySelector('.v-knob');
+    const dial = document.getElementById('dial');
+    const pointer = dial.querySelector('.pointer');
+    const successMessage = document.getElementById('successMessage');
+
+    /**
+     * Update the ring's colour based on the current RGB values.  After
+     * updating the ring, it checks if the ring colour matches the
+     * page's background colour and updates the success message.
+     */
+    function updateRingColor() {
+        ring.style.backgroundColor = `rgb(${currentColor.r},${currentColor.g},${currentColor.b})`;
+        checkMatch();
+    }
+
+    /**
+     * Compare the player's selected colour to the target colour.  If
+     * they match exactly, display the success message; otherwise hide
+     * it.
+     */
+    function checkMatch() {
+        if (
+            currentColor.r === targetColor.r &&
+            currentColor.g === targetColor.g &&
+            currentColor.b === targetColor.b
+        ) {
+            successMessage.style.display = 'block';
+        } else {
+            successMessage.style.display = 'none';
+        }
+    }
+
+    // Set up the random target colour on initial load.
+    setPageBackground();
+    updateRingColor();
+
+    // Event listener for the red (horizontal) slider.
+    sliderR.addEventListener('input', function () {
+        currentColor.r = parseInt(this.value, 10);
+        updateRingColor();
+    });
+
+    /*
+     * Custom vertical slider: clicking or dragging updates the green value.  The
+     * knob position is updated accordingly.
+     */
+    let draggingV = false;
+
+    /**
+     * Update the green value based on a y-coordinate relative to the slider.  A
+     * higher position corresponds to a larger value.  Also moves the knob.
+     * @param {number} clientY - The y position of the mouse event.
+     */
+    function setGreenFromPosition(clientY) {
+        const rect = vSliderG.getBoundingClientRect();
+        let y = clientY - rect.top;
+        // Clamp y between 0 and the slider's height
+        if (y < 0) y = 0;
+        if (y > rect.height) y = rect.height;
+        // Invert: top corresponds to value 255, bottom to 0
+        const value = Math.round((1 - (y / rect.height)) * 255);
+        currentColor.g = value;
+        // Move the knob to the appropriate position
+        const percent = (1 - value / 255) * 100;
+        knobG.style.top = percent + '%';
+        updateRingColor();
+    }
+
+    vSliderG.addEventListener('mousedown', function (e) {
+        draggingV = true;
+        setGreenFromPosition(e.clientY);
+    });
+
+    document.addEventListener('mousemove', function (e) {
+        if (draggingV) {
+            setGreenFromPosition(e.clientY);
+        }
+    });
+
+    document.addEventListener('mouseup', function () {
+        draggingV = false;
+    });
+
+    /*
+     * Circular dial behaviour: clicking and dragging anywhere on the dial
+     * determines the blue value.  The mouse position relative to the
+     * centre is converted into an angle.  This angle is then mapped to
+     * a value between 0 and 255.  The pointer rotates accordingly.
+     */
+    let draggingDial = false;
+
+    /**
+     * Given a mouse event, compute the angle relative to the dial centre
+     * and update the blue component accordingly.
+     * @param {MouseEvent} e - The current mouse event.
+     */
+    function updateDialValueFromEvent(e) {
+        const rect = dial.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const dx = e.clientX - centerX;
+        const dy = e.clientY - centerY;
+        let angle = Math.atan2(dy, dx); // returns [-π, π]
+        if (angle < 0) {
+            angle += 2 * Math.PI;
+        }
+        // Convert the angle to a value between 0 and 255
+        const value = Math.round((angle / (2 * Math.PI)) * 255);
+        currentColor.b = value;
+        // Rotate the pointer to match the angle (in degrees)
+        const deg = angle * 180 / Math.PI;
+        pointer.style.transform = `rotate(${deg}deg)`;
+        updateRingColor();
+    }
+
+    // When the user clicks on the dial, start tracking mouse movements.
+    dial.addEventListener('mousedown', function (e) {
+        draggingDial = true;
+        updateDialValueFromEvent(e);
+    });
+
+    // When the mouse moves while dragging, update the dial value.
+    document.addEventListener('mousemove', function (e) {
+        if (draggingDial) {
+            updateDialValueFromEvent(e);
+        }
+    });
+
+    // When the mouse button is released, stop tracking.
+    document.addEventListener('mouseup', function () {
+        draggingDial = false;
+    });
+
+    // Ensure the pointer reflects the initial blue value of 0 and knob at bottom
+    pointer.style.transform = `rotate(${(currentColor.b / 255) * 360}deg)`;
+    knobG.style.top = `${(1 - currentColor.g / 255) * 100}%`;
+</script>
+</body>
+</html>
