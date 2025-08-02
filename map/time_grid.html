@@ -5,14 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hex Time Grid Clock</title>
 <style>
-  body {
+  #codeDisplay {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  letter-spacing: 2px; /* 글자 간격 추가 */
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1); /* 은은한 그림자 */
+}
+ body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    /* 원래 100vh 대신 min-height로 변경 */
+    min-height: 100vh;
+    /* 상단 패딩을 주어 잘림 방지 */
+    padding-top: 20px;
     margin: 0;
   }
   #clockContainer {
@@ -46,8 +56,11 @@
 </head>
 <body>
   <div id="clockContainer"></div>
-  <div id="timeDisplay"></div>
-  
+  <img src="time_grid_0.png" alt="zero" style="width: 300px; margin-bottom: 20px;" />
+  <div id="codeDisplay"><span>00:00:00</span></div>  
+
+  <img src="time_grid_answer.png" alt="Answer Key" style="width: 300px; margin-bottom: 20px;" />
+  <div id="codeDisplay">CODE: <span>??:??:??</span></div>  
   <script>
     // Number of dots (base 16 representation requires 5 digits for 86400 seconds)
     const dotCount = 5;
@@ -84,18 +97,10 @@
     dots.forEach(dot => {
       cells[0].appendChild(dot);
     });
-    // Display the time in HH:MM:SS format
-    const timeDisplay = document.getElementById('timeDisplay');
-    function formatTime(date) {
-      const pad = n => n.toString().padStart(2, '0');
-      return `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
-    }
     function updateClock() {
       const now = new Date();
       // Ensure timezone is Asia/Seoul
       const seoulNow = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Seoul' }));
-      // display time
-      timeDisplay.textContent = formatTime(seoulNow);
       // Compute seconds since midnight
       const hours = seoulNow.getHours();
       const minutes = seoulNow.getMinutes();
