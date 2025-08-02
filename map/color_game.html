@@ -114,17 +114,6 @@
         transform: rotate(0deg);
     }
 
-    /* Success message shown when the colours match */
-    #successMessage {
-        margin-top: 20px;
-        font-size: 24px;
-        color: white;
-        font-weight: bold;
-        display: none;
-        padding: 10px 20px;
-        background: rgba(0, 0, 0, 0.5);
-        border-radius: 8px;
-    }
 </style>
 </head>
 <body>
@@ -134,12 +123,12 @@
     <div id="controls">
         <!-- Horizontal slider for the red component -->
         <div class="slider-container">
-            <label for="sliderR">Red</label>
+            <label for="sliderR">Red: <span id="red-value">0</span></label>
             <input id="sliderR" type="range" min="0" max="255" value="0">
         </div>
         <!-- Custom vertical slider for the green component -->
         <div class="slider-container">
-            <label for="sliderG">Green</label>
+            <label for="sliderG">Green: <span id="green-value">0</span></label>
             <div id="sliderG" class="vertical-slider">
                 <div class="v-track"></div>
                 <div class="v-knob"></div>
@@ -147,14 +136,12 @@
         </div>
         <!-- Circular dial for the blue component -->
         <div class="slider-container">
-            <label for="dial">Blue</label>
+            <label for="dial">Blue: <span id="blue-value">0</span></label>
             <div id="dial">
                 <div class="pointer"></div>
             </div>
         </div>
     </div>
-    <!-- Success message area -->
-    <div id="successMessage">Success!</div>
 
 <script>
     /*
@@ -200,7 +187,11 @@
     const knobG = vSliderG.querySelector('.v-knob');
     const dial = document.getElementById('dial');
     const pointer = dial.querySelector('.pointer');
-    const successMessage = document.getElementById('successMessage');
+
+    // DOM references for the value displays.
+    const redValue = document.getElementById('red-value');
+    const greenValue = document.getElementById('green-value');
+    const blueValue = document.getElementById('blue-value');
 
     /**
      * Update the ring's colour based on the current RGB values.  After
@@ -209,6 +200,12 @@
      */
     function updateRingColor() {
         ring.style.backgroundColor = `rgb(${currentColor.r},${currentColor.g},${currentColor.b})`;
+        
+        // Update the displayed values
+        redValue.textContent = currentColor.r;
+        greenValue.textContent = currentColor.g;
+        blueValue.textContent = currentColor.b;
+
         checkMatch();
     }
 
@@ -223,9 +220,7 @@
             currentColor.g === targetColor.g &&
             currentColor.b === targetColor.b
         ) {
-            successMessage.style.display = 'block';
-        } else {
-            successMessage.style.display = 'none';
+            setTimeout(() => alert("Success!"), 100);
         }
     }
 
