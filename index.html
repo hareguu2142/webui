@@ -101,6 +101,8 @@
 
     <div class="container">
 
+        <!-- 특수 CODE:TEACHER -->
+
 
         <!-- Section 1: Code Submission -->
         <section class="code-submission">
@@ -157,19 +159,15 @@
                 if (originalButtons.length === 9) {
                     mapGrid.style.gridTemplateColumns = 'repeat(4, 1fr)';
 
-                    /*
-                        새로운 맵(H,I,D,D,E,N,!)에 대한 링크입니다.
-                        아래 href 속성의 # 부분을 원하는 파일 경로로 수정하세요.
-                        예시: href="map/my_puzzle.html"
-                    */
+
                     const newMaps = [
+                        { text: 'D', href: '#' },
+                        { text: '!', href: '#' },
+                        { text: 'D', href: '#' },
                         { text: 'H', href: '#' },
-                        { text: 'I', href: '#' },
-                        { text: 'D', href: '#' },
-                        { text: 'D', href: '#' },
-                        { text: 'E', href: '#' },
                         { text: 'N', href: '#' },
-                        { text: '!', href: '#' }
+                        { text: 'E', href: '#' },
+                        { text: 'I', href: '#' }
                     ];
                     let mapIndex = 0;
 
