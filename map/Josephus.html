@@ -296,7 +296,7 @@
         <h2>문제</h2>
         <p>
             n=39, k=5일때 마지막으로 남는 숫자와 
-            n=41, k=4일때 마지막으로 남는 숫자를 곱한 값은?
+            n=41, k=7일때 마지막으로 남는 숫자를 곱한 값은?
         </p>
 
         <div class="footnotes">
@@ -342,7 +342,7 @@
             }
 
             // 금지된 조합 검사 (39,5)와 (41,4) 추가
-            forbidden = ( (N === 39 && k === 5) || (N === 41 && k === 4) );
+            forbidden = ( (N === 39 && k === 5) || (N === 41 && k === 7) );
 
             // 사람 배열 초기화
             people = Array.from({ length: N }, () => ({ alive: true, highlight: false }));
@@ -431,7 +431,7 @@
 
             // 다시 한 번 forbidden 체크
             if (forbidden) {
-                alert('n=39, k=5 또는 n=41, k=4 조합은 허용되지 않습니다.');
+                alert('n=39, k=5 또는 n=41, k=7 조합은 허용되지 않습니다.');
                 return;
             }
 
