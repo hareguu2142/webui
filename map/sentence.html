@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>명언 모음</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Noto Sans KR', sans-serif; background: #f5f7fa; color: #333; padding: 2rem; }
+    h1 { text-align: center; margin-bottom: 2rem; font-size: 2.5rem; font-weight: 700; color: #444; }
+    .container { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .1);
+      padding: 1.6rem;
+      width: 280px;
+      transition: .2s;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, .15);
+    }
+    .syllable { font-size: 4rem; font-weight: 700; text-align: center; margin-bottom: 1rem; color: #5a5a5a; }
+    .quote {
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      position: relative;
+      padding-left: 1rem;
+    }
+    .quote::before {
+      content: "“";
+      font-size: 2rem;
+      position: absolute;
+      left: 0;
+      top: -10px;
+      color: #ccc;
+    }
+    /* .highlight 스타일은 더 이상 사용되지 않습니다 */
+    .subtitle {
+      text-align: center;
+      font-size: 1.1rem;
+      color: #555;
+      margin-bottom: 2.5rem;
+    }
+    .highlight {
+      color: #e74c3c;
+      font-weight: bold;
+    }
+    .author { text-align: right; font-size: .9rem; font-style: italic; color: #666; }
+    @media (max-width: 600px) {
+      .container { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>명언 모음</h1>
+  <p class="subtitle">W어떤 문장을 읽든, 항상 <span class="highlight">첫</span> 단추를 잘 꿰메어야 한다.</p>
+  
+
+  <div class="container">
+
+    <!-- 행 -->
+    <div class="card">
+      <p class="quote">
+        행복은 향수와 같다.<br>
+        자신에게 먼저 뿌리지 않고서는 남에게 발할 수 없다.
+      </p>
+      <p class="author">– 임마누엘 칸트</p>
+    </div>
+
+    <!-- 복 -->
+    <div class="card">
+      <p class="quote">
+        복은 받는 것이 아니라<br>
+        스스로 짓는 것이다.
+      </p>
+      <p class="author">– 성철 스님</p>
+    </div>
+
+    <!-- 하 -->
+    <div class="card">
+      <p class="quote">
+        하늘은 스스로 돕는 자를 돕는다.
+      </p>
+      <p class="author">– 새뮤얼 스마일즈, 『자조론』</p>
+    </div>
+
+    <!-- 세 -->
+    <div class="card">
+      <p class="quote">
+        세상에 공짜 점심은 없다.
+      </p>
+      <p class="author">– 밀턴 프리드먼</p>
+    </div>
+
+    <!-- 요 -->
+    <div class="card">
+      <p class="quote">
+        요행을 바라지 말고<br>
+        노력을 행하라.
+      </p>
+      <p class="author">– 고사성어</p>
+    </div>
+
+  </div>
+
+</body>
+</html>
