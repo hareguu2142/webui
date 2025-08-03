@@ -80,7 +80,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>tri</h1>
+        <h1>O</h1>
 
         <div class="examples">
             <h2>덧셈 예시</h2>
@@ -141,15 +141,15 @@
             return ternaryStr;
         }
 
-        // 문제: bbbb + cccc
-        const num1_ternary = "bbbb"; // 1111_3
-        const num2_ternary = "cccc"; // 2222_3
 
-        const num1_decimal = fromTernary(num1_ternary); // 1*27 + 1*9 + 1*3 + 1*1 = 40
-        const num2_decimal = fromTernary(num2_ternary); // 2*27 + 2*9 + 2*3 + 2*1 = 54 + 18 + 6 + 2 = 80
+        const num1_ternary = "bbbb"; // 
+        const num2_ternary = "cccc"; // 
+
+        const num1_decimal = fromTernary(num1_ternary); // 
+        const num2_decimal = fromTernary(num2_ternary); // 
         
-        const sum_decimal = num1_decimal + num2_decimal; // 40 + 80 = 120
-        const correctAnswer = toTernary(sum_decimal); // 120_10 -> 11110_3 -> "bbbba"
+        const sum_decimal = num1_decimal + num2_decimal; // 
+        const correctAnswer = toTernary(sum_decimal); // 
 
         function checkAnswer() {
             const userAnswer = document.getElementById('answerInput').value.trim().toLowerCase();

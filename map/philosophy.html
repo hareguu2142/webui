@@ -166,7 +166,7 @@
         <h1>텍스트 분석기</h1>
 
         <!-- Theme Image -->
-        <img src="../source/Delphi.webp" alt="델포이 신전 관련 이미지" class="theme-image" id="themeImage">
+        <img src="../source/Delphi.webp" alt="" class="theme-image" id="themeImage">
 
         <!-- Image Size Controls -->
         <div class="image-controls">
@@ -185,7 +185,7 @@
         <div id="outputArea"></div>
 
         <!-- Code Area -->
-        <div id="codeArea">CODE: 소크라테스</div>
+        <div id="codeArea">ㅅㅋㄹㅌㅅ</div>
     </div>
 
     <script>
@@ -198,7 +198,7 @@
         const imageSizeSliderElement = document.getElementById('imageSizeSlider'); // Get the slider
         const imageSizeValueElement = document.getElementById('imageSizeValue'); // Get the size display span
 
-        const targetChars = ['너', '자', '신', '을', '알', '라'];
+        const targetChars = [45320, 51088, 49888, 51012, 50508, 46972].map(c => String.fromCharCode(c));
 
         // --- Image Size Control Logic ---
         function updateImageSize() {

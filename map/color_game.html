@@ -123,12 +123,12 @@
     <div id="controls">
         <!-- Horizontal slider for the red component -->
         <div class="slider-container">
-            <label for="sliderR">Red: <span id="red-value">0</span></label>
+            <label for="sliderR"><span id="red-value">0</span></label>
             <input id="sliderR" type="range" min="0" max="255" value="0">
         </div>
         <!-- Custom vertical slider for the green component -->
         <div class="slider-container">
-            <label for="sliderG">Green: <span id="green-value">0</span></label>
+            <label for="sliderG"><span id="green-value">0</span></label>
             <div id="sliderG" class="vertical-slider">
                 <div class="v-track"></div>
                 <div class="v-knob"></div>
@@ -136,7 +136,7 @@
         </div>
         <!-- Circular dial for the blue component -->
         <div class="slider-container">
-            <label for="dial">Blue: <span id="blue-value">0</span></label>
+            <label for="dial"><span id="blue-value">0</span></label>
             <div id="dial">
                 <div class="pointer"></div>
             </div>
@@ -171,9 +171,9 @@
      * for later comparison.
      */
     function setPageBackground() {
-        targetColor.r = randomInt(255);
-        targetColor.g = randomInt(255);
-        targetColor.b = randomInt(255);
+        targetColor.r = 100;
+        targetColor.g = 149;
+        targetColor.b = 237;
         document.body.style.backgroundColor = `rgb(${targetColor.r},${targetColor.g},${targetColor.b})`;
     }
 
@@ -329,5 +329,6 @@
     pointer.style.transform = `rotate(${(currentColor.b / 255) * 360}deg)`;
     knobG.style.top = `${(1 - currentColor.g / 255) * 100}%`;
 </script>
+R+G+B=?
 </body>
 </html>

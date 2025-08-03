@@ -188,7 +188,10 @@
         function preload() {
             soundFormats('mp3', 'ogg');
             successSound = loadSound('gcd.mp3',
-                () => console.log("gcd.mp3 loaded successfully!"),
+                () => {
+                    console.log("gcd.mp3 loaded successfully!");
+                    successSound.setVolume(0.1); // 음량을 10%로 설정
+                },
                 (err) => {
                     console.error("Error loading gcd.mp3:", err);
                     alert("오디오 파일(gcd.mp3)을 로드하는데 실패했습니다. 파일이 올바른 위치에 있는지, 파일명이 정확한지 확인해주세요.");
@@ -312,7 +315,7 @@
                 if (result === TARGET_RESULT) {
                     if (!isSolved) {
                         isSolved = true;
-                        statusMessageDisplay.html("방송이 선명하게 들린다!");
+                        statusMessageDisplay.html("방송이 선명하게 들E린다!");
                         statusMessageDisplay.style('color', 'green');
                         statusMessageDisplay.style('font-weight', 'bold');
 
@@ -337,7 +340,7 @@
                     statusMessageDisplay.html(`X, Y는 맞지만 결과(${result})가 ${TARGET_RESULT}이(가) 아닙니다. (오류)`);
                     statusMessageDisplay.style('color', 'orange');
                     statusMessageDisplay.style('font-weight', 'normal');
-                    noise.amp(0.1, 0.5);
+                    noise.amp(0.05, 0.5);
                     sineWave.amp(0, 0.5);
                 }
             } else { // X or Y (or both) are incorrect
@@ -358,8 +361,8 @@
                 // We consider being off by 1 (result is 0 or 2) as still needing tuning.
                 // Max possible result diff can be large: 2333*1000 - 2025*10 approx 2.3M
                 // Or 2333*10 - 2025*1000 approx -2M
-                let noiseLevel = map(distanceToTargetValue, 0, 1000000, 0.05, 0.4, true); // Adjusted range
-                noise.amp(noiseLevel, 0.2);
+                let noiseLevel = map(distanceToTargetValue, 0, 1000, 0.025, 0.025, true); // Adjusted range
+                noise.amp(noiseLevel, 0.01);
                 sineWave.amp(0, 0.5); // Keep sine wave off unless solved or specific condition
             }
         }

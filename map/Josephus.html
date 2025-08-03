@@ -157,8 +157,13 @@
             color: white;
         }
 
-        #startBtn:hover {
+        #startBtn:hover:not([disabled]) {
             background-color: #2980b9;
+        }
+
+        #startBtn[disabled] {
+            background-color: #ccc;
+            cursor: not-allowed;
         }
 
         #resetBtn {
@@ -288,6 +293,12 @@
             예를 들어 <code>n=7</code>, <code>k=3</code>인 경우를 살펴보겠습니다. 사람들은 <code>3</code>, <code>6</code>, <code>2</code>, <code>7</code>, <code>5</code>, <code>1</code>의 순서로 제거되며, 최종적으로 <code>4</code>번이 살아남게 됩니다. 요세푸스가 겪었던 원본 문제는 <code>n=41</code>, <code>k=3</code>인 경우로 알려져 있습니다.
         </p>
 
+        <h2>문제</h2>
+        <p>
+            n=39, k=5일때 마지막으로 남는 숫자와 
+            n=41, k=4일때 마지막으로 남는 숫자를 곱한 값은?
+        </p>
+
         <div class="footnotes">
             <h3>주석</h3>
             <ol>
@@ -308,10 +319,12 @@
         const resetBtn = document.getElementById('resetBtn');
 
         let N, k, speed, people, currentIndex, intervalId;
+        let isRunning = false;
+        let forbidden = false;  // 금지 조합 여부를 저장하는 플래그
+
         const centerX = canvas.width / 2;
         const centerY = canvas.height / 2;
         const radius = 250;
-        let isRunning = false;
         
         function init() {
             N = parseInt(nInput.value) || 0;
@@ -328,13 +341,26 @@
                 nInput.value = 1;
             }
 
+            // 금지된 조합 검사 (39,5)와 (41,4) 추가
+            forbidden = ( (N === 39 && k === 5) || (N === 41 && k === 4) );
+
+            // 사람 배열 초기화
             people = Array.from({ length: N }, () => ({ alive: true, highlight: false }));
             currentIndex = -1;
+
             draw();
-            startBtn.disabled = false;
-            startBtn.textContent = '시작';
+
+            // 컨트롤 상태 업데이트
             nInput.disabled = false;
             kInput.disabled = false;
+
+            if (forbidden) {
+                startBtn.disabled = true;
+                startBtn.textContent = '허용되지 않는 조합';
+            } else {
+                startBtn.disabled = false;
+                startBtn.textContent = '시작';
+            }
         }
 
         function draw() {
@@ -347,20 +373,18 @@
                 ctx.beginPath();
                 ctx.arc(x, y, 15, 0, 2 * Math.PI);
 
-                // 상태에 따른 스타일링
                 if (people[i].alive) {
-                    ctx.fillStyle = '#eaf5ff'; // 생존자 배경색
-                    ctx.strokeStyle = people[i].highlight ? '#3498db' : '#aed6f1'; // 하이라이트/기본 테두리
+                    ctx.fillStyle = '#eaf5ff';
+                    ctx.strokeStyle = people[i].highlight ? '#3498db' : '#aed6f1';
                 } else {
-                    ctx.fillStyle = '#fadbd8'; // 제거자 배경색
-                    ctx.strokeStyle = '#e74c3c'; // 제거자 테두리
+                    ctx.fillStyle = '#fadbd8';
+                    ctx.strokeStyle = '#e74c3c';
                 }
                 
                 ctx.lineWidth = 2.5;
                 ctx.fill();
                 ctx.stroke();
 
-                // 텍스트 스타일
                 ctx.fillStyle = people[i].alive ? '#2c3e50' : '#a93226';
                 ctx.font = 'bold 14px "Noto Sans KR"';
                 ctx.textAlign = 'center';
@@ -373,7 +397,6 @@
             const alivePeople = people.filter(p => p.alive);
             if (alivePeople.length <= 1) {
                 stopSimulation();
-                // 최후의 1인 강조
                 const winner = people.findIndex(p => p.alive);
                 if (winner !== -1) {
                     people[winner].highlight = true;
@@ -382,7 +405,6 @@
                 return;
             }
 
-            // 이전에 강조된 부분 해제
             people.forEach(p => p.highlight = false);
 
             let count = 0;
@@ -393,12 +415,11 @@
                 }
             }
 
-            // 제거될 사람 강조 후 제거
             people[currentIndex].highlight = true;
             draw();
             
             setTimeout(() => {
-                if (!isRunning) return; // 중간에 리셋되면 실행 중지
+                if (!isRunning) return;
                 people[currentIndex].alive = false;
                 people[currentIndex].highlight = false;
                 draw();
@@ -407,14 +428,20 @@
 
         function startSimulation() {
             if (isRunning) return;
-            
+
+            // 다시 한 번 forbidden 체크
+            if (forbidden) {
+                alert('n=39, k=5 또는 n=41, k=4 조합은 허용되지 않습니다.');
+                return;
+            }
+
             k = parseInt(kInput.value);
-            if(k < 1) {
+            if (k < 1) {
                 k = 1;
                 kInput.value = 1;
             }
 
-            init(); // n 값이 변경되었을 수 있으므로 재초기화
+            init(); // n이나 k가 바뀌었을 수 있으므로 재초기화
             if (N < 1) return;
 
             isRunning = true;
@@ -437,7 +464,6 @@
         }
 
         startBtn.addEventListener('click', startSimulation);
-
         resetBtn.addEventListener('click', () => {
             stopSimulation();
             init();
@@ -455,7 +481,7 @@
         nInput.addEventListener('change', init);
         kInput.addEventListener('change', init);
         
-        // 초기화 및 그리기
+        // 최초 초기화
         init();
     </script>
 </body>

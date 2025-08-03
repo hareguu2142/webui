@@ -61,23 +61,22 @@
             overflow: hidden; /* 원이 밖으로 나가지 않도록 함 */
         }
 
-        /* 동적으로 생성될 원의 기본 스타일 */
-        .circle {
+        /* 동적으로 생성될 사각형의 기본 스타일 */
+        .square {
             width: 80px;
             height: 80px;
             position: absolute; /* display-area 내부에 자유롭게 위치 */
-            border-radius: 50%;
             box-sizing: border-box; /* 테두리를 크기 안에 포함 */
             animation: fadeInOut 0.5s forwards;
         }
 
-        /* 속이 꽉 찬 원 */
-        .circle.filled {
+        /* 속이 꽉 찬 사각형 */
+        .square.filled {
             background-color: #ffffff;
         }
 
-        /* 속이 빈 원 */
-        .circle.empty {
+        /* 속이 빈 사각형 */
+        .square.empty {
             background-color: transparent;
             border: 8px solid #ffffff;
         }
@@ -132,7 +131,7 @@
                 max-height: 500px;
             }
 
-            .circle {
+            .square {
                 width: 60px;
                 height: 60px;
             }
@@ -142,16 +141,16 @@
 <body>
 
     <div class="puzzle-container">
-        <!-- 정답(CIRCLE)의 각 알파벳을 나타내는 6개의 네모 -->
         <div class="input-boxes">
-            <div class="box" data-letter="C1"></div>
-            <div class="box" data-letter="I"></div>
-            <div class="box" data-letter="R"></div>
-            <div class="box" data-letter="C2"></div>
-            <div class="box" data-letter="L"></div>
-            <div class="box" data-letter="E"></div>
+            <div class="box" data-letter="S"></div>
+            <div class="box" data-letter="O"></div>
+            <div class="box" data-letter="U"></div>
+            <div class="box" data-letter="S"></div>
+            <div class="box" data-letter="N"></div>
+            <div class="box" data-letter="D"></div>
         </div>
 
+        코드는 대문자 알파벳
         <!-- 애니메이션이 표시될 큰 네모 -->
         <div id="display-area"></div>
     </div>
@@ -162,45 +161,40 @@
             const boxes = document.querySelectorAll('.box');
             const displayArea = document.getElementById('display-area');
 
-            // 각 알파벳을 3x5 그리드의 1(채운 원)과 0(빈 원)으로 표현
+            // 각 알파벳을 3x5 그리드의 1(채운 사각형)과 0(빈 사각형)으로 표현
             const patterns = {
-                C: [1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1],
-                I: [1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1],
-                R: [1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1],
-                L: [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1],
-                E: [1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1]
+                S: [1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1],
+                O: [1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 1],
+                U: [1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1],
+                N: [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1],
+                D: [1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 1]
             };
 
-            let currentAnimation = null; // 현재 실행 중인 애니메이션을 제어하기 위한 변수
+            let isAnimating = false; // 애니메이션 상태를 추적하는 변수
 
             // 애니메이션을 재생하는 함수
             const playAnimation = (pattern) => {
-                // 이전 애니메이션이 실행 중이면 중단
-                if (currentAnimation) {
-                    clearTimeout(currentAnimation);
-                }
-
-                // 디스플레이 영역을 비움
+                isAnimating = true; // 애니메이션 시작
                 displayArea.innerHTML = '';
 
                 let delay = 0;
                 const animationDuration = 500; // CSS의 animation 시간과 일치
 
                 pattern.forEach((type, index) => {
-                    currentAnimation = setTimeout(() => {
-                        // 이전 원을 지우고 새 원을 만듦
+                    setTimeout(() => {
                         displayArea.innerHTML = '';
 
-                        const circle = document.createElement('div');
-                        circle.classList.add('circle');
-                        circle.classList.add(type === 1 ? 'filled' : 'empty');
+                        const square = document.createElement('div');
+                        square.classList.add('square');
+                        square.classList.add(type === 1 ? 'filled' : 'empty');
                         
-                        displayArea.appendChild(circle);
+                        displayArea.appendChild(square);
 
-                        // 마지막 원이 표시된 후 디스플레이 영역을 비움
+                        // 마지막 사각형 애니메이션이 끝나면 상태 변경
                         if (index === pattern.length - 1) {
                             setTimeout(() => {
                                 displayArea.innerHTML = '';
+                                isAnimating = false; // 애니메이션 종료
                             }, animationDuration);
                         }
                     }, delay);
@@ -212,6 +206,11 @@
             // 각 네모에 클릭 이벤트 리스너 추가
             boxes.forEach(box => {
                 box.addEventListener('click', () => {
+                    if (isAnimating) {
+                        alert('애니메이션이 재W생 중입니다. 잠시 후 다시 시도해주세요.');
+                        return;
+                    }
+
                     const letter = box.dataset.letter;
                     
                     // C1, C2 모두 'C' 패턴을 사용하도록 처리

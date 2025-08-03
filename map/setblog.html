@@ -41,6 +41,8 @@
 
     <h1>계층적 집합 구조</h1>
 
+    <img src="setblog.png" alt="계층적 집합 구조" style="width: 100%;">
+
     <div id="set-container">
         <ul>
             <!-- 가 = {나, 하} -->
@@ -79,74 +81,79 @@
                             </li>
                         </ul>
                     </li>
-                    <!-- 하 = {고, 노} -->
+                    <!-- 하 = {고, 다} -->
                     <li>
                         <span class="toggle">하</span>
                         <ul class="nested">
-                            <li>고</li>
-                            <li>노</li>
+                            <li>
+                                <span class="toggle">고</span>
+                                <ul class="nested">
+                                    <!-- 거 = {더} -->
+                                    <li>
+                                        <span class="toggle">거</span>
+                                        <ul class="nested">
+                                            <!-- 더 = {러} -->
+                                            <li>
+                                                <span class="toggle">더</span>
+                                                <ul class="nested">
+                                                    <li>러</li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <span class="toggle">다</span>
+                                <ul class="nested">
+                                    <!-- 너 = {머, 버, 서} -->
+                                    <li>
+                                        <span class="toggle">너</span>
+                                        <ul class="nested">
+                                            <!-- 머 = {어, 저} -->
+                                            <li>
+                                                <span class="toggle">머</span>
+                                                <ul class="nested">
+                                                    <li>어</li>
+                                                    <li>저</li>
+                                                </ul>
+                                            </li>
+                                            <!-- 버 = {처} -->
+                                            <li>
+                                                <span class="toggle">버</span>
+                                                <ul class="nested">
+                                                    <li>처</li>
+                                                </ul>
+                                            </li>
+                                            <!-- 서 = {커, 터, 자} -->
+                                            <li>
+                                                <span class="toggle">서</span>
+                                                <ul class="nested">
+                                                    <li>커</li>
+                                                    <li>터</li>
+                                                    <li>자</li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <!-- 허 = {고, 노} -->
+                                    <li>
+                                        <span class="toggle">허</span>
+                                        <ul class="nested">
+                                            <!-- 고 = {도} -->
+                                            <li>
+                                                <span class="toggle">고</span>
+                                                <ul class="nested">
+                                                    <li>도</li>
+                                                </ul>
+                                            </li>
+                                            <li>노</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
                         </ul>
                     </li>
-                </ul>
-            </li>
-
-            <!-- 거 = {더} -->
-            <li>
-                <span class="toggle">거</span>
-                <ul class="nested">
-                    <!-- 더 = {러} -->
-                    <li>
-                        <span class="toggle">더</span>
-                        <ul class="nested">
-                            <li>러</li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-
-            <!-- 너 = {머, 버, 서} -->
-            <li>
-                <span class="toggle">너</span>
-                <ul class="nested">
-                    <!-- 머 = {어, 저} -->
-                    <li>
-                        <span class="toggle">머</span>
-                        <ul class="nested">
-                            <li>어</li>
-                            <li>저</li>
-                        </ul>
-                    </li>
-                    <!-- 버 = {처} -->
-                    <li>
-                        <span class="toggle">버</span>
-                        <ul class="nested">
-                            <li>처</li>
-                        </ul>
-                    </li>
-                    <!-- 서 = {커, 터, 퍼} -->
-                    <li>
-                        <span class="toggle">서</span>
-                        <ul class="nested">
-                            <li>커</li>
-                            <li>터</li>
-                            <li>퍼</li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-            
-            <!-- 허 = {고, 노} -->
-            <li>
-                <span class="toggle">허</span>
-                <ul class="nested">
-                    <!-- 고 = {도} -->
-                    <li>
-                        <span class="toggle">고</span>
-                        <ul class="nested">
-                            <li>도</li>
-                        </ul>
-                    </li>
-                    <li>노</li>
                 </ul>
             </li>
         </ul>

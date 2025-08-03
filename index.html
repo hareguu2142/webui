@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>코드 제출 및 지도 페이지</title>
+    <title>2025년 수학 퍼즐 대회</title>
     <style>
         /* Basic Reset & Font */
         body {
@@ -66,50 +66,33 @@
             text-decoration: none;
         }
 
-        /* Map Links List */
-        .map-links ul {
-            list-style: none; /* Remove default bullets */
-            padding: 0;
-        }
-        .map-links li {
-            margin-bottom: 10px; /* Space between list items */
-            padding: 8px;
-            background-color: #ecf0f1; /* Very light grey background for items */
-            border-radius: 4px;
-            transition: background-color 0.2s ease;
-        }
-        .map-links li:hover {
-             background-color: #dde4e6; /* Slightly darker on hover */
-        }
-        .map-links a {
-            font-weight: 500; /* Slightly bolder text for links */
+        /* Map Grid */
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px; /* Space between buttons */
+            margin-top: 20px;
         }
 
-        /* Input and Button section */
-        .move-section {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #e0e0e0; /* Separator line */
-        }
-        #myInput {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            margin-right: 5px;
-            min-width: 200px; /* Give it some width */
-        }
-        #submitBtn {
-            padding: 10px 15px;
-            background-color: #3498db; /* Blue */
+        .map-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            aspect-ratio: 1 / 1; /* Create square shape */
+            background-color: #3498db;
+            border-radius: 8px;
+            text-decoration: none;
             color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1em;
-            transition: background-color 0.2s ease-in-out;
+            font-weight: bold;
+            font-size: 1.2em;
+            text-align: center;
+            transition: background-color 0.2s ease-in-out, transform 0.2s ease;
         }
-        #submitBtn:hover {
-            background-color: #2980b9; /* Darker blue */
+
+        .map-button:hover {
+            background-color: #2980b9;
+            transform: scale(1.05); /* Slight zoom effect on hover */
+            text-decoration: none;
         }
 
     </style>
@@ -118,41 +101,138 @@
 
     <div class="container">
 
-        <h1>코드 제출 및 관련 페이지</h1>
 
         <!-- Section 1: Code Submission -->
         <section class="code-submission">
-            <h2>코드 제출</h2>
-            <p>아래 링크를 클릭하여 코드를 제출해주세요.</p>
             <p class="submit-link">
-                <a href="https://script.google.com/macros/s/AKfycbz9nLplXG8YN13ooW_KCtJNQgOOc3BB0DDbwlyIIZTCOK7RFNyAq2Mq_q4X6Nwd9Ssp/exec" target="_blank" rel="noopener noreferrer">코드 제출하러 가기</a>
+                <a href="https://script.google.com/macros/s/AKfycbxXpjyImeXuSUjHr1cGizcqVLjx35PgkKbaMUhLughOYMEabUJ4O9pIIiqtt1e-Soy3qA/exec" target="_blank" rel="noopener noreferrer"></a>
             </p>
         </section>
 
         <!-- Section 2: Map File Links -->
         <section class="map-links">
-            <h2>문제 페이지 링크</h2>
-            <ul>
-                <li><a href="map/2cycle.html">2cycle.html</a></li>
-                <li><a href="map/5315.html">5315.html</a></li>
-                <li><a href="map/box.html">box.html</a></li>
-                <li><a href="map/color_game.html">color_game.html</a></li>
-                <li><a href="map/darkstory.html">darkstory.html</a></li>
-                <li><a href="map/gcd.html">gcd.html</a></li>
-                <li><a href="map/Josephus.html">Josephus.html</a></li>
-                <li><a href="map/looog.html">looog.html</a></li>
-                <li><a href="map/matrix.html">matrix.html</a></li>
-                <li><a href="map/philosophy.html">philosophy.html</a></li>
-                <li><a href="map/phone.html">phone.html</a></li>
-                <li><a href="map/point.html">point.html</a></li>
-                <li><a href="map/set.html">set.html</a></li>
-                <li><a href="map/students.html">students.html</a></li>
-                <li><a href="map/ternary_quiz.html">ternary_quiz.html</a></li>
-                <li><a href="map/time_grid.html">time_grid.html</a></li>
-            </ul>
+            <div class="map-grid">
+                <a href="map/phone.html" class="map-button"></a>
+                <a href="map/5315.html" class="map-button"></a>
+                <a href="map/set.html" class="map-button"></a>
+                <a href="map/matrix.html" class="map-button"></a>
+                <a href="map/gcd.html" class="map-button"></a>
+                <a href="map/point.html" class="map-button"></a>
+                <a href="map/looog.html" class="map-button"></a>
+                <a href="map/darkstory.html" class="map-button"></a>
+                <a href="map/ternary_quiz.html" class="map-button"></a>
+            </div>
         </section>
 
+        <div style="text-align: center; margin-top: 20px;">
+            <span id="toggle-hidden" style="color: rgb(243, 242, 242); cursor: pointer; font-size: 1.5em;">?</span>
+        </div>
+
+        <div id="hidden-section" style="display: none; text-align: center; margin-top: 15px;">
+            <input type="text" id="secret-input" placeholder="?">
+            <br>
+            <img src="/map/hidden.png" alt="hidden image" style="margin-top: 10px; max-width: 30%;">
+        </div>
+
     </div> <!-- End Container -->
+
+    <script>
+        // Function to apply the "NEWWORLD" changes
+        function activateNewWorld() {
+            // 1. Change background and text color
+            document.body.style.backgroundColor = '#000000';
+            document.body.style.color = '#f4f7f6';
+
+            // container의 배경색도 검정으로 변경
+            const container = document.querySelector('.container');
+            if (container) {
+                container.style.backgroundColor = '#000000';
+            }
+
+            // 2. Change grid layout
+            const mapGrid = document.querySelector('.map-grid');
+            if (mapGrid) {
+                const originalButtons = Array.from(mapGrid.querySelectorAll('.map-button'));
+
+                // Only run if the grid is in its original 3x3 state
+                if (originalButtons.length === 9) {
+                    mapGrid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+
+                    /*
+                        새로운 맵(H,I,D,D,E,N,!)에 대한 링크입니다.
+                        아래 href 속성의 # 부분을 원하는 파일 경로로 수정하세요.
+                        예시: href="map/my_puzzle.html"
+                    */
+                    const newMaps = [
+                        { text: 'H', href: '#' },
+                        { text: 'I', href: '#' },
+                        { text: 'D', href: '#' },
+                        { text: 'D', href: '#' },
+                        { text: 'E', href: '#' },
+                        { text: 'N', href: '#' },
+                        { text: '!', href: '#' }
+                    ];
+                    let mapIndex = 0;
+
+                    const createNewButton = () => {
+                        const mapInfo = newMaps[mapIndex++];
+                        const button = document.createElement('a');
+                        button.href = mapInfo.href; // 링크는 여기서 수정
+                        button.className = 'map-button';
+                        button.textContent = mapInfo.text;
+                        button.style.backgroundColor = '#e74c3c'; // Red color for new buttons
+                        return button;
+                    };
+
+                    // Insert new buttons to create the 4x4 grid
+                    originalButtons[2].after(createNewButton());
+                    originalButtons[5].after(createNewButton());
+                    originalButtons[8].after(createNewButton());
+
+                    // Add the final row
+                    for (let i = 0; i < 4; i++) {
+                        mapGrid.appendChild(createNewButton());
+                    }
+                }
+            }
+            
+            // Hide the toggle and input section
+            const hiddenSection = document.getElementById('hidden-section');
+            const toggleButton = document.getElementById('toggle-hidden');
+            if(hiddenSection) hiddenSection.style.display = 'none';
+            if(toggleButton) toggleButton.style.display = 'none';
+        }
+
+        // Check local storage on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('newWorldUnlocked') === 'true') {
+                activateNewWorld();
+            }
+        });
+
+        // Toggle for hidden section
+        document.getElementById('toggle-hidden').addEventListener('click', function() {
+            var hiddenSection = document.getElementById('hidden-section');
+            if (hiddenSection.style.display === 'none') {
+                hiddenSection.style.display = 'block';
+            } else {
+                hiddenSection.style.display = 'none';
+            }
+        });
+
+        // Secret code handler
+        const secretInput = document.getElementById('secret-input');
+        if (secretInput) {
+            secretInput.addEventListener('keyup', function(event) {
+                // Check for Enter key and correct value
+                if (event.key === 'Enter' && this.value.toUpperCase() === 'NEWWORLD') {
+                    // Activate the new world and save to local storage
+                    activateNewWorld();
+                    localStorage.setItem('newWorldUnlocked', 'true');
+                }
+            });
+        }
+    </script>
 
 </body>
 </html>

@@ -110,7 +110,7 @@
     
 
     <div class="container">
-        <h1>T9 숫자 변환기</h1>
+        <h1>T9 숫자 변환<span style="color: red; background-color: lime;">N</span>기</h1>
 <div style="display: flex; justify-content: center; align-items: center; margin-top: 20px;">
     <img src="../source/phone.png" alt="Old Phone Image" style="max-width: 50%; height: auto; border-radius: 5px; margin-right: 10px;">
     <img src="../source/phone2.png" alt="Phone Keypad Diagram" style="max-width: 50%; height: auto; border-radius: 5px; margin-left: 10px;">
@@ -200,19 +200,10 @@
         // ---- MODIFIED Event Listener ----
         convertButton.addEventListener('click', () => {
             const inputText = inputElement.value; // Get raw input
-            const targetPhrase = "the essence of mathematics is freedom"; // The trigger phrase
-
-            // Check if the input exactly matches the target phrase (case-sensitive)
-            if (inputText === targetPhrase) {
-                // If it matches, display the code message in the result area
-                resultElement.textContent = "CODE: cardinality";
-                resultElement.className = 'code-output'; // Apply special styling
-            } else {
-                // Otherwise, perform the normal T9 conversion
-                const t9Output = convertToT9(inputText);
-                resultElement.textContent = t9Output; // Display the T9 result
-                resultElement.className = ''; // Remove special styling if present
-            }
+            // Perform the normal T9 conversion
+            const t9Output = convertToT9(inputText);
+            resultElement.textContent = t9Output; // Display the T9 result
+            resultElement.className = ''; // Remove special styling if present
         });
 
         // Optional: Allow conversion on pressing Enter in the input field
