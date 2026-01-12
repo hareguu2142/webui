@@ -47,8 +47,18 @@
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            width: calc(100% - 22px); /* padding and border */
+            width: calc(100% - 22px);
             margin-bottom: 10px;
+        }
+        input.operand-input {
+            width: 120px;
+            margin-bottom: 0;
+            text-align: center;
+        }
+        input[readonly] {
+            background-color: #f0f0f0;
+            color: #555;
+            cursor: not-allowed;
         }
         button {
             background-color: #007bff;
@@ -76,6 +86,24 @@
             border-radius: 4px;
             display: inline-block;
         }
+        .operand-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        .operand-row .operator {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .sum-area {
+            background-color: #f8f8f8;
+            border: 1px dashed #ccc;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -100,11 +128,19 @@
 
         <div class="quiz-question">
             <h2>문제</h2>
-            <p>다음 덧셈을 계산하세요:</p>
-            <p><code>bbbb + cccc = ?</code></p>
+            <p>다음 덧셈을 계산하세요: bbbb+cccc</p>
+            <div class="operand-row">
+                <input type="text" id="operand1" class="operand-input" placeholder="e.g. ba">
+                <span class="operator">+</span>
+                <input type="text" id="operand2" class="operand-input" placeholder="e.g. ba">
+            </div>
             <label for="answerInput">답:</label>
             <input type="text" id="answerInput" placeholder="예: ba">
             <button onclick="checkAnswer()">제출</button>
+
+            <div class="sum-area">
+                덧셈 결과: <span id="sumResult" class="code">...</span>
+            </div>
         </div>
 
         <div id="resultMessage"></div>
@@ -142,18 +178,85 @@
         }
 
 
-        const num1_ternary = "bbbb"; // 
-        const num2_ternary = "cccc"; // 
+        const forbiddenOperands = new Set(['bbbb', 'cccc']);
 
-        const num1_decimal = fromTernary(num1_ternary); // 
-        const num2_decimal = fromTernary(num2_ternary); // 
-        
-        const sum_decimal = num1_decimal + num2_decimal; // 
-        const correctAnswer = toTernary(sum_decimal); // 
+        const operand1Input = document.getElementById('operand1');
+        const operand2Input = document.getElementById('operand2');
+        const sumResult = document.getElementById('sumResult');
+        const resultDiv = document.getElementById('resultMessage');
+
+        const lastValidOperands = {
+            operand1: '',
+            operand2: ''
+        };
+
+        function normalizeOperand(value) {
+            return value.trim().toLowerCase();
+        }
+
+        function isValidTernary(value) {
+            return /^[abc]+$/.test(value);
+        }
+
+        function resetOutputs() {
+            sumResult.textContent = '...';
+            resultDiv.textContent = '';
+            resultDiv.style.color = '';
+        }
+
+        function showError(message) {
+            resultDiv.textContent = message;
+            resultDiv.style.color = 'red';
+        }
+
+        function handleOperandInput(inputEl, key) {
+            const normalized = normalizeOperand(inputEl.value);
+
+            resetOutputs();
+
+            if (normalized === '') {
+                lastValidOperands[key] = '';
+                inputEl.value = '';
+                return;
+            }
+
+            if (forbiddenOperands.has(normalized)) {
+                inputEl.value = lastValidOperands[key];
+                showError('bbbb and cccc are not allowed.');
+                return;
+            }
+
+            lastValidOperands[key] = normalized;
+            inputEl.value = normalized;
+        }
+
+        operand1Input.addEventListener('input', () => handleOperandInput(operand1Input, 'operand1'));
+        operand2Input.addEventListener('input', () => handleOperandInput(operand2Input, 'operand2'));
 
         function checkAnswer() {
-            const userAnswer = document.getElementById('answerInput').value.trim().toLowerCase();
-            const resultDiv = document.getElementById('resultMessage');
+            const userAnswer = normalizeOperand(document.getElementById('answerInput').value);
+            const op1 = normalizeOperand(operand1Input.value);
+            const op2 = normalizeOperand(operand2Input.value);
+
+            if (!op1 || !op2) {
+                showError('Enter both operands first.');
+                return;
+            }
+
+            if (forbiddenOperands.has(op1) || forbiddenOperands.has(op2)) {
+                showError('bbbb and cccc are not allowed.');
+                return;
+            }
+
+            if (!isValidTernary(op1) || !isValidTernary(op2)) {
+                showError('Only a, b, c are allowed.');
+                return;
+            }
+
+            const sumDecimal = fromTernary(op1) + fromTernary(op2);
+            const correctAnswer = toTernary(sumDecimal);
+
+            sumResult.textContent = correctAnswer;
 
             if (userAnswer === correctAnswer) {
                 resultDiv.innerHTML = '정답입니다! <br><span class="code">CODE:triangle</span>';
